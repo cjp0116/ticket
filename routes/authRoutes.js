@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const ExpressError = require("../ExpressError");
 const jwt = require("jsonwebtoken");
 const { SECRET } = require("../config");
-
+const User = require('../models/users')
 // function createToken(user) {
 //   let payload = { username : user.username };
 //   return jwt.sign(payload, SECRET)
@@ -18,6 +17,8 @@ router.post("/login", async (req, res, next) => {
   } catch(e) {
     return next(e)
   }
-})
+});
+
+
 
 module.exports = router;
