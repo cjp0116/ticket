@@ -5,6 +5,8 @@ const bcrypt = require("bcrypt");
 const BCRYPT_WORKFACTOR = 10;
 
 class User {
+  
+  // Only admins can register.
   static async register(data) {
     const dupCheck = await db.query('SELECT username from users where username = $1', [data.username]);
     if(dupCheck.rowCount) {
@@ -44,9 +46,9 @@ class User {
 
   static async update(username, data) {
     if(data.password) {
-      data.password = await bcrypt.hash(data.passwor,BCRYPT_WORKFACTOR);
+      data.password = await bcrypt.hash(data.password, BCRYPT_WORKFACTOR);
     }
-    const { query, values} = sqlForPartialUpdate("users", data, "username", username);
+    const { query, values } = sqlForPartialUpdate("users", data, "username", username);
     const res = await db.query(query, values);
     const user = res.rows[0];
     if(!user) {
@@ -62,5 +64,7 @@ class User {
       throw new ExpressError('username does not exist', 404)
     };
   }
+
 }
+
 module.exports = User;

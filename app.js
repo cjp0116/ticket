@@ -7,10 +7,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended : true }));
 app.use(cors());
 
+const userRoutes = require('./routes/userRoutes');
+const authRoutes = require("./routes/authRoutes");
+
+app.use("/", authRoutes);
+app.use("/users", userRoutes);
+
 app.use((req, res, next) => {
   const error = new ExpressError('Page not found', 404);
   return next(error)
-})
+});
 
 app.use((err, req, res, next) => {
   console.log(err.msg);
