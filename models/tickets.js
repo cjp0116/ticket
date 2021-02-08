@@ -52,7 +52,7 @@ class Ticket {
     if(!checkIfExists.rowCount) {
       throw new ExpressError('Ticket does not exist', 404)
     };
-
+    const res = await db.query('delete from tickets where id = $1', [ticketID])
   }
 };
 

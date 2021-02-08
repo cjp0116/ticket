@@ -9,9 +9,11 @@ app.use(cors());
 
 const userRoutes = require('./routes/userRoutes');
 const authRoutes = require("./routes/authRoutes");
+const ticketRoutes = require("./routes/ticketRoutes");
 
 app.use("/", authRoutes);
 app.use("/users", userRoutes);
+app.use("/tickets", ticketRoutes);
 
 app.use((req, res, next) => {
   const error = new ExpressError('Page not found', 404);

@@ -75,4 +75,4 @@ create table notes (
 create table departments (
   deptCode TEXT PRIMARY KEY,
   deptName TEXT 
-)
+);

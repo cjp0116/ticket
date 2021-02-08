@@ -39,6 +39,25 @@ router.post("/", async (req, res, next) => {
 });
 
 // PUT /tickets/:ticketID
-// => { ticket : { } }
+// => { ticket : { id, createdBy, assignedTo, createdAt, importanceLevel, closedAt ,isResolved, subject, requestDetail } }
+router.put("/:id", async (req, res, next) => {
+  try {
+    const ticket = await Ticket.update(req.params.id, req.body);
+    return res.status(200).json({ ticket })
+  } catch(e) {
+    return next(e)
+  }
+});
+
+// DELETE /tickets/:id
+// => { message : 'deleted' }
+router.delete('/:id', async (req, res, next) => {
+  try {
+    await Ticket.destroy(req.params.id);
+    return res.status(200).json({ message : 'deleted' })
+  } catch(e) {
+    return next(e)
+  }
+});
 
 module.exports = router;
