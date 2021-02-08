@@ -17,8 +17,17 @@ class Ticket {
   }
   
   static async create(data) {
-    const res = await db.query('insert into tickets (createdBy, assignedTo, importanceLevel, closedAt, isResolved) values ($1, $2, $3, $4, $5) returning *', 
-      [data.createdBy, data.assignedTo, data.createdBy, data.importanceLevel, data.closedAt, data.isResolved]
+    const res = await db.query(
+      `INSERT INTO tickets 
+        (createdBy, 
+          assignedTo, 
+          createdAt, 
+          importanceLevel, 
+          isResolved, 
+          subject, requestDetail
+        )
+         VALUES ($1, $2, $3, $4, $5, $6, $7)
+         RETURNING *`, [data.createdBy, data.assignedTo, data.createdAt, data.importanceLevel, data.isResolved, data.subject, data.requestDetail]
     );
     const ticket = res.rows[0];
     return ticket;

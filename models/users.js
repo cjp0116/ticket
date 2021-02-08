@@ -5,66 +5,73 @@ const bcrypt = require("bcrypt");
 const BCRYPT_WORKFACTOR = 10;
 
 class User {
-  
   // Only admins can register.
-  static async register(data) {
-    const dupCheck = await db.query('SELECT username from users where username = $1', [data.username]);
+  static async reigster(data) {
+    const dupCheck = await db.query(`SELCT * FROM users WHERE username = $1`, [data.username]);
     if(dupCheck.rowCount) {
-      throw new ExpressError('Username already exists', 400)
-    };
-    const hashedPW = bcrypt.hash(data.password, BCRYPT_WORKFACTOR);
-    const res = await db.query(
-      "insert into users (username, email, password, firstName, lastName, deptCode) values ($1, $2, $3, $4, $5, $6) returning username, password, firstName, lastName, deptCode", [data.username, hashedPW, data.firstName, data.lastName, data.deptCode]
-    );
-    return res.rows[0];
-  };
-
-  static async authenticate(data) {
-    const res = await db.query('select username, password, email, firstName, lastName, deptCode from users where username = $1', [data.username])
-    const user = res.rows[0];
-    if(user) {
-      if(await bcrypt.compare(data.password, user.password)) {
-        return user;
-      }
+      throw new ExpressError(`Username ${data.username} already exists`, 409);
     }
-    throw new ExpressError('Invalid credentials', 401)
-  };
-
-  static async findAll() {
-    const res = await db.query('select username, email, firstName, lastName, deptCode from users');
-    return res.rows;
-  };
-
-  static async findOne(username) {
-    const res = await db.query('select username, email, firstName, lastName, deptCode from users where username = $1', [username])
-    const user = res.rows[0];
-    if(!user) {
-      throw new ExpressError('User does not exist', 404);
-    }
-    return user;
-  };
-
-  static async update(username, data) {
     if(data.password) {
       data.password = await bcrypt.hash(data.password, BCRYPT_WORKFACTOR);
     }
-    const { query, values } = sqlForPartialUpdate("users", data, "username", username);
-    const res = await db.query(query, values);
+    const res = await db.query(
+      `INSERT INTO users (email, username, password, firstName, lastName, deptCode)
+      VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`, [data.email, data.username, data.password, data.firstName, data.lastName, data.deptCode]
+    );
     const user = res.rows[0];
-    if(!user) {
-      throw new ExpressError("User does not exist", 404);
-    }
+    delete user.id;
     delete user.password;
     return user;
-  }
-  
-  static async remove(username) {
-    const res = await db.query('delete from users where username = $1 returning username', [username])
-    if(!res.rowCount) {
-      throw new ExpressError('username does not exist', 404)
-    };
-  }
+  };
 
-}
+  static async findOne(username) {
+    const res = await db.query(
+      `SELECT * FROM users WHERE username = $1`, [username]
+    );
+    if(!res.rowCount) {
+      throw new ExpressError(`Username ${username} does not exist`, 404);
+    };
+    const user = res.rows[0];
+    delete user.id;
+    delete user.password; 
+    return user;
+  };
+
+  static async findAll() {
+    const res = await db.query(
+      `SELECT * FROM users`
+    );
+    const users = res.rows;
+    // remove id, password, isAdmin before returning
+    for(const user of users) {
+      delete user.id;
+      delete user.password;
+      delete user.isAdmin;
+    };
+    return users;
+  };
+
+  static async remove(username) {
+    const checkIfExists = await db.query(
+      `SELECT * FROM users WHERE username = $1`, [username]
+    );
+    if(!checkIfExists.rowCount) {
+      throw new ExpressError(`username ${username} does not exist`, 404);
+    };
+    const res = await db.query(
+      `DELETE FROM users WHERE username = $1`, [username]
+    );
+  };
+
+  static async update(username, data) {
+    const checkIfExists = await db.query(`SELECT * FROM users WHERE username = $1`, [username])
+    if(!checkIfExists.rowCount) {
+      throw new ExpressError(`Username ${username} does not exist`, 404);
+    };
+    const { query, values } = sqlForPartialUpdate('users', data, 'username', username)
+    const updatedUser = await db.query(query, values);
+    return updatedUser.rows[0]
+  };
+};
 
 module.exports = User;
