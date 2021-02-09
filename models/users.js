@@ -72,6 +72,7 @@ class User {
     const updatedUser = await db.query(query, values);
     return updatedUser.rows[0]
   };
+
 };
 
 module.exports = User;
