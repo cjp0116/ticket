@@ -5,6 +5,22 @@ const bcrypt = require("bcrypt");
 const BCRYPT_WORKFACTOR = 10;
 
 class User {
+
+  static async authenticate(data) {
+    const res = await db.query(
+      `SELECT * FROM users WHERE username = $1`, [data.username]
+    );
+    if(!res.rowCount) {
+      throw new ExpressError('Cannot authenticate', 401)
+    };
+    const user = res.rows[0];
+    if( (await bcrypt.compare(data.password, user.password)) ) {
+      return user;
+    } else {
+      throw new ExpressError('Cannot authenticate', 401)
+    };
+  };
+
   // Only admins can register.
   static async reigster(data) {
     const dupCheck = await db.query(`SELCT * FROM users WHERE username = $1`, [data.username]);

@@ -8,6 +8,9 @@ const User = require('../models/users')
 //   return jwt.sign(payload, SECRET)
 // };
 
+// Log in user; return token.
+// invalid creds should raise 401.
+// returns { token : jwt-token-string }.
 router.post("/login", async (req, res, next) => {
   try {
     const user = await User.authenticate(req.body);
