@@ -1,7 +1,7 @@
 
-drop database if exists ticket_system;
-create database ticket_system;
-\c ticket_system;
+drop database if exists ticket_system_test;
+create database ticket_system_test;
+\c ticket_system_test;
 
 drop table if exists users;
 drop table if exists tickets;
@@ -45,17 +45,17 @@ create table notes (
 INSERT INTO departments (deptCode, deptName) 
 VALUES ('F_END', 'front-end'), ('B_END', 'back-end'), ('F_STACK', 'full-stack'); 
 
-COPY users (email, username, password, firstName, lastName, deptCode) 
-FROM 'C:\Users\Jae Cho\Desktop\SpringBoard\capstone\capstone-2\generator\users.csv'
-DELIMITER ',' 
-CSV HEADER;
+-- COPY users (email, username, password, firstName, lastName, deptCode) 
+-- FROM 'C:\Users\Jae Cho\Desktop\SpringBoard\capstone\capstone-2\generator\users.csv'
+-- DELIMITER ',' 
+-- CSV HEADER;
 
-COPY tickets (createdBy, assignedTo, createdAt, importanceLevel, closedAt, isResolved, subject, requestDetail)
-FROM 'C:\Users\Jae Cho\Desktop\Springboard\capstone\capstone-2\generator\tickets.csv'
-DELIMITER ','
-CSV HEADER;
+-- COPY tickets (createdBy, assignedTo, createdAt, importanceLevel, closedAt, isResolved, subject, requestDetail)
+-- FROM 'C:\Users\Jae Cho\Desktop\Springboard\capstone\capstone-2\generator\tickets.csv'
+-- DELIMITER ','
+-- CSV HEADER;
 
-COPY notes (ticketID, createdBy, createdAt, message) 
-FROM 'C:\Users\Jae Cho\Desktop\Springboard\capstone\capstone-2\generator\notes.csv'
-DELIMITER ','
-CSV HEADER;
+-- COPY notes (ticketID, createdBy, createdAt, message) 
+-- FROM 'C:\Users\Jae Cho\Desktop\Springboard\capstone\capstone-2\generator\notes.csv'
+-- DELIMITER ','
+-- CSV HEADER;

@@ -8,7 +8,6 @@ const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const { SECRET } = require("../config");
 
-let user;
 const tokens = {};
 
 function createToken(username, admin=false) {
@@ -34,6 +33,7 @@ beforeEach(async () => {
   };
 });
 
+// AUTHENTICATION ROUTES
 describe('POST /login', () => {
   test("should log valid users in", async () => {
     const res = await request(app).post("/login").send({
@@ -49,13 +49,33 @@ describe('POST /login', () => {
   });
 
   test('should return 401 error if cannot authenticate', async () => {
-    const res = await (await request(app).post("/login")).send({
+    const res = await request(app).post("/login").send({
       username : "I dont exist lmao",
       password : "this is the worst pw ever"
     });
     expect(res.statusCode).toBe(401);
   });
 });
+
+// REGISTRATION ROUTES
+describe("POST /register", () => {
+  test("Admins registering successful users", async () => {
+    const res = await request(app).post("/register").send({
+      _token : tokens.testUser3,
+      email : "u1@u1.com",
+      username : "test",
+      password : "somepw",
+      firstName : "firstName",
+      lastName : 'lastName',
+      deptCode : 'F_STACK'
+    });
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual({ token : expect.any(String) });
+    const { username, admin } = jwt.verify(res.body.token, SECRET);
+    expect(username).toBe('test');
+    expect(admin).toBe(false);
+  })
+})
 
 afterEach(async function () {
   await db.query(`DELETE FROM users`);
