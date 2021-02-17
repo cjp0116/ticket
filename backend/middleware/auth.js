@@ -34,7 +34,7 @@ function ensureAdmin(req, res, next) {
     req.username = token.username;
     if(token.isAdmin) return next();
 
-    throw new ExpressError('Not authorized', 404);
+    throw new ExpressError('Not authorized', 401);
 
   } catch(e) {
     return next(e)

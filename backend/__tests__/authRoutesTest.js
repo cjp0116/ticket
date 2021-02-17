@@ -10,8 +10,8 @@ const { SECRET } = require("../config");
 
 const tokens = {};
 
-function createToken(username, admin=false) {
-  let payload = { username, admin };
+function createToken(username, isAdmin=false) {
+  let payload = { username, isAdmin };
   return jwt.sign(payload, SECRET);
 };
 
@@ -40,12 +40,12 @@ describe('POST /login', () => {
       username : "testUser1",
       password : "pw1"
     });
-    expect(res.statusCode).toBe(200);
+    expect(res.statusCode).toBe(201);
     expect(res.body).toEqual({ token : expect.any(String) });
     
-    const { username, admin } = jwt.verify(res.body.token, SECRET);
+    const { username, isAdmin } = jwt.verify(res.body.token, SECRET);
     expect(username).toBe('testUser1');
-    expect(admin).toBe(false);
+    expect(isAdmin).toBe(false);
   });
 
   test('should return 401 error if cannot authenticate', async () => {
@@ -59,21 +59,15 @@ describe('POST /login', () => {
 
 // REGISTRATION ROUTES
 describe("POST /register", () => {
-  test("Admins registering successful users", async () => {
-    const res = await request(app).post("/register").send({
+  test('should raise 409 if incorrect username/pw', async () => {
+    const res = await request(app).post('/register').send({
       _token : tokens.testUser3,
-      email : "u1@u1.com",
-      username : "test",
-      password : "somepw",
-      firstName : "firstName",
-      lastName : 'lastName',
-      deptCode : 'F_STACK'
+      email : "testEmail55@gmail.com",
+      username : "testUser1",
+      password : "ososecret"
     });
-    expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual({ token : expect.any(String) });
-    const { username, admin } = jwt.verify(res.body.token, SECRET);
-    expect(username).toBe('test');
-    expect(admin).toBe(false);
+    console.log(res.body)
+    // expect(res.statusCode).toBe(409);
   })
 })
 

@@ -22,22 +22,25 @@ class User {
   };
 
   // Only admins can register.
-  static async reigster(data) {
-    const dupCheck = await db.query(`SELCT * FROM users WHERE username = $1`, [data.username]);
+  static async register(data) {
+    const dupCheck = await db.query(
+      `SELCT * FROM users 
+      WHERE username = $1 OR WHERE email = $2`, 
+      [data.username, data.email]
+    );
     if(dupCheck.rowCount) {
-      throw new ExpressError(`Username ${data.username} already exists`, 409);
+      throw new ExpressError(`Username ${data.username} or email ${data.email} already exists`, 409);
     }
     if(data.password) {
       data.password = await bcrypt.hash(data.password, BCRYPT_WORKFACTOR);
     }
     const res = await db.query(
-      `INSERT INTO users (email, username, password, firstName, lastName, deptCode)
-      VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`, [data.email, data.username, data.password, data.firstName, data.lastName, data.deptCode]
+      `INSERT INTO users (email, username, password, firstName, lastName, deptCode, isAdmin)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      RETURNING *`,
+      [data.email, data.username, data.password, data.firstName, data.lastName, data.deptCode, data.isAdmin]
     );
-    const user = res.rows[0];
-    delete user.id;
-    delete user.password;
-    return user;
+    return res.rows[0];
   };
 
   static async findOne(username) {

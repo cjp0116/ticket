@@ -4,11 +4,11 @@ const jwt = require('jsonwebtoken');
 const { authRequired, ensureCorrectUser, ensureAdmin } = require("../middleware/auth");
 const Ticket = require('../models/tickets');
 
-// GET /tickets
-// => { tickets : [{ticket}, {ticket}]}
+// GET tickets/
+// => { tickets : [{ticket, notes : [{}] }, {ticket, notes : [{}] }]}
 router.get("/", async (req, res, next) => {
   try {
-    const tickets = await Ticket.getALL();
+    const tickets = await Ticket.getAll();
     return res.status(200).json({ tickets })
   } catch(e) {
     return next(e)

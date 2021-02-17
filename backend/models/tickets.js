@@ -7,13 +7,12 @@ const BCRYPT_WORKFACTOR = 10;
 class Ticket {
 
   static async getAll() {
-    const res = await db.query('select * from tickets');
-    const tickets = res.rows[0];
-    for(const ticket of tickets) {
-      const noteRes = await db.query('select * from notes where ticketID = $1', [ticket.id]);
-      ticket.notes = noteRes.rows[0] 
-    }
-    return res.rows[0]
+    const tickets = await db.query(`SELECT * FROM tickets`);
+    for(const ticket of tickets.rows) {
+      const notes = await db.query(`SELECT * FROM notes WHERE ticketID = $1`, [ticket.id]);
+      ticket.notes = notes.rows[0]
+    };
+    return tickets.rows;
   }
   
   static async create(data) {

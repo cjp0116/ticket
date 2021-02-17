@@ -3,9 +3,10 @@ drop database if exists ticket_system_test;
 create database ticket_system_test;
 \c ticket_system_test;
 
-drop table if exists users;
-drop table if exists tickets;
 drop table if exists notes;
+drop table if exists tickets;
+drop table if exists users;
+drop table if exists departments;
 
 create table departments (
   deptCode TEXT PRIMARY KEY,
@@ -19,7 +20,7 @@ create table users (
   password text not null,
   firstName text not null,
   lastName text not null,
-  deptCode text REFERENCES departments (deptCode),
+  deptCode text REFERENCES departments (deptCode) ON DELETE CASCADE,
   isAdmin BOOLEAN default false
 );
 
