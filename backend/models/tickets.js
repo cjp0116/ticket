@@ -20,13 +20,20 @@ class Ticket {
       `INSERT INTO tickets 
         (createdBy, 
           assignedTo, 
-          createdAt, 
           importanceLevel, 
           isResolved, 
-          subject, requestDetail
+          subject, 
+          requestDetail
         )
-         VALUES ($1, $2, $3, $4, $5, $6, $7)
-         RETURNING *`, [data.createdBy, data.assignedTo, data.createdAt, data.importanceLevel, data.isResolved, data.subject, data.requestDetail]
+         VALUES ($1, $2, $3, $4, $5, $6)
+         RETURNING *`, [
+          data.createdBy, 
+          data.assignedTo, 
+          data.importanceLevel, 
+          data.isResolved, 
+          data.subject, 
+          data.requestDetail
+        ]
     );
     const ticket = res.rows[0];
     return ticket;
@@ -39,7 +46,7 @@ class Ticket {
     };
     const noteRes = await db.query('select * from notes where ticketID = $1', [id]);
     const ticket = res.rows[0];
-    ticket.notes = noteRes.rows[0];
+    ticket.notes = noteRes.rows;
     return ticket;
   };
 
@@ -47,7 +54,7 @@ class Ticket {
     if(data.password) {
       data.password = await bcrypt.hash(data.password, BCRYPT_WORKFACTOR)
     }
-    const { query, values } = sqlForPartialUpdate('tickets', data, 'ticketID', ticketID);
+    const { query, values } = sqlForPartialUpdate('tickets', data, 'id', ticketID);
     const res = await db.query(query, values);
     if(!res.rowCount) {
       throw new ExpressError('Ticket does not exist', 404)
@@ -55,12 +62,46 @@ class Ticket {
     return res.rows[0]
   };
 
-  static async destroy(ticketID, data) { 
+  static async destroy(ticketID) { 
     const checkIfExists = await db.query('select * from tickets where id = $1', [ticketID]);
     if(!checkIfExists.rowCount) {
       throw new ExpressError('Ticket does not exist', 404)
     };
     const res = await db.query('delete from tickets where id = $1', [ticketID])
+  };
+
+  // NOTES 
+  static async createNotes(ticketID, data) {
+    const ticketRes = await db.query(`SELECT * FROM tickets WHERE id = $1`, [ticketID]);
+    if(!ticketRes.rowCount) {
+      throw new ExpressError('Ticket does not exist', 404);
+    }
+    const notes = await db.query(
+      `INSERT INTO notes (ticketID, createdBy, message) 
+      VALUES ($1, $2, $3)
+      RETURNING *`, [ticketID, data.createdBy, data.message]
+    );
+    const ticket = ticketRes.rows[0];
+    ticket.notes = notes.rows;
+    return ticket;
+  };
+
+  static async updateNotes(ticketID, id, data) {
+    const ticketRes = await db.query(`SELECT * FROM tickets WHERE id = $1`, [ticketID]);
+    if(!ticketRes.rowCount) throw new ExpressError('Ticket does not exist', 404);
+    const { query, values } = sqlForPartialUpdate('notes', data, 'id', id);
+    const notes = await db.query(query, values);
+    ticketRes.rows[0].notes = notes.rows;
+    return ticketRes.rows[0]; 
+  };
+
+  static async deleteNote(ticketID, id) {
+    const ticket = await db.query(`SELECT * FROM tickets WHERE id = $1`, [ticketID]);
+    if(!ticket.rowCount) throw new ExpressError('Ticket does not exist', 404);
+    const notes = await db.query(`SELECT * FROM notes WHERE id = $1`, [id]);
+    if(!notes.rowCount) throw new ExpressError('Note does not exist', 404);
+    await db.query(`DELETE FROM notes WHERE id = $1`, [id]);
+    return await Ticket.getById(ticketID);
   }
 };
 

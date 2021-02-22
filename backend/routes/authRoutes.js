@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-const { SECRET, DB_URI } = require("../config");
+const { SECRET } = require("../config");
 const User = require('../models/users');
 const { ensureAdmin } = require("../middleware/auth");
 
@@ -28,11 +28,11 @@ router.post("/login", async (req, res, next) => {
 // returns { token : jwt-token-string }.
 // incorrect usernames/pw should raise 409.
 // if they're not a admin, should raise 401.
-router.post("/register", async (req, res, next) => {
-  try {
+router.post("/register", ensureAdmin, async (req, res, next) => {
+  try{
     const user = await User.register(req.body);
     const token = createToken(user.username, user.isAdmin);
-    return res.status(201).json({ token });
+    return res.status(200).json({ token });
   } catch(e) {
     return next(e)
   }

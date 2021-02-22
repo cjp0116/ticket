@@ -24,8 +24,8 @@ class User {
   // Only admins can register.
   static async register(data) {
     const dupCheck = await db.query(
-      `SELCT * FROM users 
-      WHERE username = $1 OR WHERE email = $2`, 
+      `SELECT * FROM users 
+      WHERE username = $1 OR email = $2`, 
       [data.username, data.email]
     );
     if(dupCheck.rowCount) {

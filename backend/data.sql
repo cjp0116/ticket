@@ -26,8 +26,8 @@ create table users (
 
 create table tickets (
   id SERIAL PRIMARY KEY,
-  createdBy TEXT REFERENCES users (username) ON DELETE SET NULL,
-  assignedTo TEXT REFERENCES users (username) ON DELETE SET NULL,
+  createdBy TEXT REFERENCES users (username) ON DELETE CASCADE,
+  assignedTo TEXT REFERENCES users (username) ON DELETE CASCADE,
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   importanceLevel INT,
   closedAt TIMESTAMP,
@@ -37,8 +37,9 @@ create table tickets (
 );
 
 create table notes (
-  ticketID INT REFERENCES tickets (id), 
-  createdBy TEXT REFERENCES users (username),
+  id SERIAL PRIMARY KEY,
+  ticketID INT REFERENCES tickets (id) ON DELETE CASCADE, 
+  createdBy TEXT REFERENCES users (username) ON DELETE CASCADE,
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   message TEXT
 );

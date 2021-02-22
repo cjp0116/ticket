@@ -66,10 +66,33 @@ describe("POST /register", () => {
       username : "testUser1",
       password : "ososecret"
     });
-    console.log(res.body)
-    // expect(res.statusCode).toBe(409);
+    expect(res.statusCode).toBe(409);    
+  });
+  test('It should return a token upon successful registration', async () => {
+    const res = await request(app).post("/register").send({
+      _token : tokens.testUser3,
+      email : "testEmail99@gmail.com",
+      username : "testing",
+      password : "testing",
+      firstName : "Jae",
+      lastName : "Cho",
+      deptCode : "F_STACK",
+      isAdmin : false
+    });
+    expect(res.statusCode).toBe(200);
+    const { username, isAdmin } = jwt.verify(res.body.token, SECRET);
+    expect(username).toBe('testing');
+    expect(isAdmin).toBe(false);
+  });
+  test('It should raise 401 if non-admin tries to register', async () => {
+    const res = await request(app).post('/register').send({
+      _token : tokens.testUser1,
+      username : 'something',
+      password : 'something'
+    });
+    expect(res.statusCode).toBe(401);
   })
-})
+});
 
 afterEach(async function () {
   await db.query(`DELETE FROM users`);
