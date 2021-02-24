@@ -18,8 +18,8 @@ function deleteUser(username) {
   return async function(dispatch) {
     const message = await Api.request(`http://localhost:5000/users/${username}`);
     dispatch({ type : 'DELETE_USER', payload : username });
-  }
-}
+  };
+};
 
 
 export { getUsers, getUserByUsername, deleteUser };
