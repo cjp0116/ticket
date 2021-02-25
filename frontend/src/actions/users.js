@@ -1,4 +1,4 @@
-import Api from "../../backendAPI";
+import Api from "../backendAPI";
 
 function getUsers() {
   return async function(dispatch) {
@@ -10,7 +10,7 @@ function getUsers() {
 function getUserByUsername(username) {
   return async function(dispatch) {
     const user = await Api.request(`http://localhost:5000/users/${username}`);
-    dispatch({ type : 'GET_USER', payload : user });
+    dispatch({ type : 'GET_USER', payload : user }); 
   };
 };
 

@@ -1,11 +1,15 @@
-import Api from "../../backendAPI";
+import Api from "../backendAPI";
 
 const BASEURL = `http://localhost:5000/tickets`
 
 function getAllTickets() {
   return async function(dispatch) {
-    const tickets = await Api.request(BASEURL);
-    dispatch({ type : 'LOAD_TICKETS', payload : tickets });
+    try {
+      const tickets = await Api.request(BASEURL);
+      dispatch({ type : 'LOAD_TICKETS', payload : tickets })
+    } catch(e) {
+      console.log(e)
+    }
   };
 };
 
@@ -20,7 +24,7 @@ function postTicket() {
   return async function(dispatch) {
     const ticket = await Api.request(`${BASEURL}`);
     dispatch({ type : 'POST_TICKET', payload : ticket });
-  };
+  };  
 };
 
 function updateTicket(ticketID) {

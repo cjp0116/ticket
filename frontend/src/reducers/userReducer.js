@@ -4,7 +4,7 @@ function users(state = initialState, action) {
   switch(action.type) {
 
     case 'RESET_ALL': {
-      return [...initialState]
+      return initialState;
     };
     
     case 'LOAD_USERS': {
@@ -12,7 +12,7 @@ function users(state = initialState, action) {
     };
     
     case 'GET_USER': {
-      return action.payload;
+      return state.find(ele => ele === action.payload);
     };
     
     case 'DELETE_USER': {

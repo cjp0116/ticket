@@ -9,19 +9,25 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import rootReducer from "./reducers/rootReducer";
 
+import { BrowserRouter } from "react-router-dom";
+
+import 'semantic-ui-css/semantic.min.css';
 
 const store = createStore(
   rootReducer,
   compose(applyMiddleware(thunk),
   window.__REDUX_DEVTOOLS_EXTENSION__
-  && window.__REDUX_DEVTOOLS_EXTENSION__()
+  && window.__REDUX_DEVTOOLS_EXTENSION__() 
   )
 );
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <Provider store={store}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </Provider>
+  ,
   document.getElementById('root')
 );
 
