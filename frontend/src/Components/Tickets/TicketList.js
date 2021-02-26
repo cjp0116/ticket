@@ -7,8 +7,9 @@ import Spinner from "../../UI/Spinner";
 const TicketList = props => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const tickets = useSelector(store => store.tickets) || [];
-
+  const tickets = useSelector(store => store.tickets);
+  // const store = useSelector(s => s);
+  // console.log(store);
   useEffect(() => {
     if(!tickets) {
       setLoading(true);
@@ -16,6 +17,8 @@ const TicketList = props => {
     }
     setLoading(false);
   }, [dispatch, tickets])
+
+  console.log(tickets);
 
   if(loading) return Spinner;
   return (

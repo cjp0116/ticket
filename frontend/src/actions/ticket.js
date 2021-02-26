@@ -6,59 +6,82 @@ function getAllTickets() {
   return async function(dispatch) {
     try {
       const tickets = await Api.request(BASEURL);
-      dispatch({ type : 'LOAD_TICKETS', payload : tickets })
+      dispatch(loadTickets(tickets))
     } catch(e) {
       console.log(e)
     }
   };
 };
+function loadTickets(tickets) {
+  return { type : 'LOAD_TICKETS', tickets };
+};
+
 
 function getTicketByID(ticketID) {
   return async function(dispatch) {
     const ticket = await Api.request(`${BASEURL}/${ticketID}`);
-    dispatch({ type : 'GET_TICKET', payload : ticketID })
+    dispatch(getTicket(ticket))
   };
 };
+function getTicket(ticket) {
+  return { type : 'GET_TICKET', ticket }
+};
+
 
 function postTicket() {
   return async function(dispatch) {
     const ticket = await Api.request(`${BASEURL}`);
-    dispatch({ type : 'POST_TICKET', payload : ticket });
+    dispatch(addTicket(ticket))
   };  
 };
+function addTicket(ticket) {
+  return { type : 'POST_TICKET', ticket }
+};
+
 
 function updateTicket(ticketID) {
   return async function (dispatch) {
     const ticket = await Api.request(`${BASEURL}/${ticketID}`);
-    dispatch({ type : 'UPDATE_TICKET', payload : ticket, ticketID });
+    dispatch(updateState(ticket, ticketID));
   };
 };
+function updateState(ticket, ticketID) {
+  return { type : 'UPDATE_TICKET', ticket, ticketID };
+};
+
 
 function deleteTicket(ticketID) {
   return async function (dispatch) {
     await Api.request(`${BASEURL}/${ticketID}`);
-    dispatch({ type : 'REMOVE_TICKET', payload : ticketID });
+    dispatch(removeFromState(ticketID));
   };
 };
+function removeFromState(ticketID) {
+  return { type : 'REMOVE_TICKET', ticketID };
+};
+
 
 function createNote(ticketID) {
   return async function (dispatch) {
     const ticket = await Api.request(`${BASEURL}/${ticketID}/notes`);
-    dispatch({ type : 'CREATE_NOTE', ticketID, payload : ticket });
+    dispatch(addNote(ticket, ticketID));
   };
 };
+function addNote(ticket, ticketID) {
+  return { type : 'CREATE_NOTE', ticket, ticketID };
+};
+
 
 function updateNote(ticketID, noteID) {
   return async function (dispatch) {
     const ticket = await Api.request(`${BASEURL}/${ticketID}/notes/${noteID}`);
-    dispatch({
-      type : 'UPDATE_NOTE',
-      payload : ticket,
-      ticketID,
-      noteID
-    });
+    dispatch(updateNoteState(noteID, ticketID, ticket));
   }
 };
+function updateNoteState(noteID, ticketID, ticket) {
+  return { type : 'UPDATE_NOTE', noteID, ticketID, ticket };
+}
+
 
 function deleteNote(noteID, ticketID) {
   return async function(dispatch) {

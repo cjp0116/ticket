@@ -3,37 +3,45 @@ const initialState = [];
 function ticketReducer(state = initialState, action) {
   switch(action.type) {
     case 'LOAD_TICKETS': {
-      return [...action.payload.tickets];
-    }
+      return [...action.tickets]
+    };
+    
     case 'GET_TICKET': {
-      return state.find(ele => ele.id === action.payload);
-    }
+      return state.find(ele => ele === action.ticket);
+    };
+
     case 'POST_TICKET': {
-      return [...state, action.payload.ticket]
-    }
+      return [...state, action.ticket]
+    };
+    
     case 'UPDATE_TICKET': {
       let foundTicket = state.find(ele => ele.id === action.ticketID);
-      foundTicket = action.payload.ticket;
+      foundTicket = action.ticket;
       return state;
     };
+    
     case 'REMOVE_TICKET': {
-      return state.filter(ele => ele.id !== action.payload);
+      return state.filter(ele => ele.id !== action.ticketID);
     };
+    
     case 'CREATE_NOTE': {
       let foundTicket = state.find(ele => ele.id === action.ticketID);
-      foundTicket.notes = [...foundTicket.notes, ...action.payload.ticket.notes];
+      foundTicket.notes = [...foundTicket.notes, ...action.ticket.notes];
       return state;
     };
+
     case 'UPDATE_NOTE': {
       let foundTicket = state.find(ele => ele.id === action.ticketID);
-      foundTicket = action.payload.ticket;
+      let foundNote = foundTicket.notes.find(ele => ele.id === action.noteID);
+      foundNote = action.ticket.notes[0];
       return state;
     };
+
     case 'DELETE_NOTE': {
-      let foundTicket = state.find(ele => ele.id === action.ticketID);
-      foundTicket = action.payload.ticket;
+
       return state;
-    }
+    };
+
     default: {
       return state;
     }

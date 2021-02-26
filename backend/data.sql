@@ -1,7 +1,7 @@
 
-drop database if exists ticket_system_test;
-create database ticket_system_test;
-\c ticket_system_test;
+drop database if exists ticket_system;
+create database ticket_system;
+\c ticket_system;
 
 drop table if exists notes;
 drop table if exists tickets;
