@@ -9,7 +9,7 @@ const Routes = props => {
     <Switch>
       <Route exact path="/" component={HomePage} />
       <Route exact path="/login" component={Login} />
-      <Route to="/tickets" component={TicketList} />
+      <Route exact path="/tickets" component={TicketList} />
       <Redirect to="/" />
     </Switch>
   )

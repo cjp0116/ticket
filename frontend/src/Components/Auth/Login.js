@@ -5,6 +5,9 @@ const Login = props => {
     username : "",
     password : ""
   });
+  const handleChange = e => {
+    setForm(form => ({ ...form, [e.target.name] : e.target.value }))
+  }
   return (
     <>
       <form onSubmit={e => e.preventDefault()}>

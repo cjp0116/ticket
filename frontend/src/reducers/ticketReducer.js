@@ -44,8 +44,8 @@ function ticketReducer(state = initialState, action) {
 
     default: {
       return state;
-    }
-  }
-}
+    };
+  };
+};
 
 export default ticketReducer;
