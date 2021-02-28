@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu } from 'semantic-ui-react';
+import AuthContext from "../context/AuthContext";
 
 const Navbar = props => {
   const [activeItem, setActiveItem] = useState('My Tickets');
+  const { handleLogout } = useContext(AuthContext);
+
   const handleItemClick = (name) => {
     setActiveItem(name)
   };
@@ -35,16 +38,19 @@ const Navbar = props => {
         <Link to="/search">
           <Menu.Item
             name='Search Tickets'
+            icon="search"
+            iconPosition="left"
             active={activeItem === 'Search Tickets'}
             onClick={() => handleItemClick('Search Tickets')}
           />
         </Link>
-
         <Menu.Menu position='right'>
           <Menu.Item
             name="logout"
+            icon="user"
+            iconPosition="left"
             active={activeItem === 'logout'}
-            onClick={() => handleItemClick('logout')}
+            onClick={handleLogout}
           />
         </Menu.Menu>
       </Menu>

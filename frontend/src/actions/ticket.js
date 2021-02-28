@@ -5,7 +5,8 @@ const BASEURL = `http://localhost:5000/tickets`
 function getAllTickets() {
   return async function(dispatch) {
     try {
-      const tickets = await Api.request(BASEURL);
+      let ticketsResults = await Api.request(BASEURL);
+      const tickets = ticketsResults.data.tickets;
       dispatch(loadTickets(tickets))
     } catch(e) {
       console.log(e)

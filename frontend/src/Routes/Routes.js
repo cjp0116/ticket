@@ -3,14 +3,16 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import HomePage from "../Components/HomePage";
 import Login from "../Components/Auth/Login";
 import TicketList from "../Components/Tickets/TicketList";
+import Ticket  from "../Components/Tickets/Ticket"
 
 const Routes = props => {
   return (
     <Switch>
-      <Route exact path="/" component={HomePage} />
+      <Route exact path="/" component={Login} />
       <Route exact path="/login" component={Login} />
       <Route exact path="/tickets" component={TicketList} />
-      <Redirect to="/" />
+      <Route exact path="/tickets/:ticketID" component={Ticket} />
+      <Redirect to="/tickets" />
     </Switch>
   )
 };

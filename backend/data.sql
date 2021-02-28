@@ -47,6 +47,12 @@ create table notes (
 INSERT INTO departments (deptCode, deptName) 
 VALUES ('F_END', 'front-end'), ('B_END', 'back-end'), ('F_STACK', 'full-stack'); 
 
+INSERT INTO users (id, email, username, password, firstName, lastName, deptCode, isAdmin) 
+VALUES (1, 'admin@admin.com', 'admin','$2b$10$XtKei/jcPtgqAQ1rHfLFKOLaY0JevTueMQFR.8pIsA3s.KNIsd3K2', 'Jae', 'Cho', 'F_STACK', true);
+
+INSERT INTO tickets (createdBy, assignedTo, importanceLevel, isResolved, subject, requestDetail)
+VALUES ('admin', 'admin', 5, false, 'fix UI', 'fix the UI'), ('admin', 'admin', 5, false, 'fix DB', 'fix the DB');
+
 -- COPY users (email, username, password, firstName, lastName, deptCode) 
 -- FROM 'C:\Users\Jae Cho\Desktop\SpringBoard\capstone\capstone-2\generator\users.csv'
 -- DELIMITER ',' 
