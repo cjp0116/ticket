@@ -5,12 +5,32 @@ import AuthContext from "../context/AuthContext";
 
 const Navbar = props => {
   const [activeItem, setActiveItem] = useState('My Tickets');
-  const { handleLogout } = useContext(AuthContext);
+  const { handleLogout, currentUser } = useContext(AuthContext);
 
   const handleItemClick = (name) => {
     setActiveItem(name)
   };
 
+  const nonAuthMarkUp = () => {
+    return (
+      <div>
+        <Menu pointing secondary>
+          <Menu.Menu position="right">
+            <Link to="/login">
+              <Menu.Item
+                icon="user"
+                iconPosition="left"
+                name='Login'
+                active={activeItem === 'Login'}
+                onClick={() => handleItemClick('Login')}
+              />
+            </Link>
+          </Menu.Menu>
+        </Menu>
+      </div>
+    );
+  };
+  if (!currentUser) return nonAuthMarkUp()
   return (
     <div>
       <Menu pointing secondary>

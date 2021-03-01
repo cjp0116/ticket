@@ -10,7 +10,9 @@ const TicketList = props => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const tickets = useSelector(store => store.tickets);
-  const history = useHistory()
+  const history = useHistory();
+  const currentURL = window.location.href;
+
   useEffect(() => {
     if (!tickets.length) {
       setLoading(true);
@@ -20,15 +22,15 @@ const TicketList = props => {
   }, [dispatch, tickets]);
 
   const handleClick = (ticketID) => {
-    const currentURL = window.location.href
-    history.push(`${currentURL}/${ticketID}`)
-    console.log(currentURL)
+    const current = window.location.href;
+    console.log(current + "/" + ticketID);
+    history.push(current + "/" + ticketID)
   }
-  
+
   console.log(tickets)
-  
+
   if (loading) return Spinner;
-  
+
   return (
     <Table celled selectable sortable>
       <Table.Header>
@@ -45,18 +47,20 @@ const TicketList = props => {
 
       <Table.Body>
         {tickets.map(t => (
-          <Table.Row error={!t.isresolved} textAlign="center" onClick={() => handleClick(t.id)}>
-            <Table.Cell>{t.id}</Table.Cell>
-            <Table.Cell>{t.createdby}</Table.Cell>
-            <Table.Cell>{t.assignedto}</Table.Cell>
-            <Table.Cell>{t.createdat}</Table.Cell>
-            <Table.Cell>
-              {t.importancelevel}
-               {t.importancelevel > 3 && <Icon name='attention'/>}
-            </Table.Cell>
-            <Table.Cell>{t.isresolved ? 'closed' : 'open'}</Table.Cell>
-            <Table.Cell>{t.subject}</Table.Cell>
-          </Table.Row>
+          <Link to={`${currentURL}/${t.id}`} style={{ textDecoration: 'none' }}>
+            <Table.Row error={!t.isresolved} textAlign="center" onClick={() => handleClick(t.id)}>
+              <Table.Cell>{t.id}</Table.Cell>
+              <Table.Cell>{t.createdby}</Table.Cell>
+              <Table.Cell>{t.assignedto}</Table.Cell>
+              <Table.Cell>{t.createdat}</Table.Cell>
+              <Table.Cell>
+                {+t.importancelevel}
+                {+t.importancelevel > 3 && <Icon name='attention' />}
+              </Table.Cell>
+              <Table.Cell>{t.isresolved ? 'closed' : 'open'}</Table.Cell>
+              <Table.Cell>{t.subject}</Table.Cell>
+            </Table.Row>
+          </Link>
         ))}
       </Table.Body>
     </Table>
