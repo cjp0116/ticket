@@ -1,13 +1,19 @@
 const initialState = [];
 
+function editDate(date) {
+  return date.substr(0, 10);
+}
+
 function ticketReducer(state = initialState, action) {
   switch(action.type) {
     case 'LOAD_TICKETS': {
-      return [...action.tickets]
-    };
-    
-    case 'GET_TICKET': {
-      return state.find(ele => ele === action.ticket);
+      const withEdit = action.tickets.map(ticket => {
+        let dateToString = String(ticket.createdat);
+        dateToString = editDate(dateToString);
+        ticket.createdat = dateToString;
+        return ticket;
+      });
+      return [...withEdit]
     };
 
     case 'POST_TICKET': {

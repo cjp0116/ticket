@@ -37,11 +37,11 @@ function App() {
 
   if (loading) return Spinner;
   return (
-    <AuthContext.Provider value={{ setToken, currentUser, setCurrentUser, handleLogout}}>
-      <div className="App">
-        <Navbar />
-        <Routes />
-      </div>
+    <AuthContext.Provider value={{ setToken, currentUser, setCurrentUser, handleLogout }}>
+        <div className="App">
+          <Navbar />
+          <Routes />
+        </div>
     </AuthContext.Provider>
   );
 }

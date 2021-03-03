@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu } from 'semantic-ui-react';
+import { Dropdown, Menu, Icon } from 'semantic-ui-react';
 import AuthContext from "../context/AuthContext";
 
 const Navbar = props => {
@@ -19,7 +19,7 @@ const Navbar = props => {
             <Link to="/login">
               <Menu.Item
                 icon="user"
-                iconPosition="left"
+                iconposition="left"
                 name='Login'
                 active={activeItem === 'Login'}
                 onClick={() => handleItemClick('Login')}
@@ -34,32 +34,45 @@ const Navbar = props => {
   return (
     <div>
       <Menu pointing secondary>
-        <Link to="/mine">
+        <Dropdown item icon="plus" simple>
+          <Dropdown.Menu>
+            <Dropdown.Item>
+              <Icon name="dropdown" />
+                <span className="text">New</span>
+              <Dropdown.Menu>
+              <Dropdown.Item>
+                <Link exact to="/newTicket">Ticket</Link>
+              </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+        <Link exact to="/mine">
           <Menu.Item
             name='My Tickets'
             active={activeItem === 'My Tickets'}
             onClick={() => handleItemClick('My Tickets')}
           />
         </Link>
-        <Link to="/group">
+        <Link exact to="/group">
           <Menu.Item
             name='Group Tickets'
             active={activeItem === 'Group Tickets'}
             onClick={() => handleItemClick('Group Tickets')}
           />
         </Link>
-        <Link to="/recent">
+        <Link exact to="/recent">
           <Menu.Item
             name='Recent Tickets'
             active={activeItem === 'Recent Tickets'}
             onClick={() => handleItemClick('Recent Tickets')}
           />
         </Link>
-        <Link to="/search">
+        <Link exact to="/search">
           <Menu.Item
             name='Search Tickets'
             icon="search"
-            iconPosition="left"
+            iconposition="left"
             active={activeItem === 'Search Tickets'}
             onClick={() => handleItemClick('Search Tickets')}
           />
@@ -68,7 +81,7 @@ const Navbar = props => {
           <Menu.Item
             name="logout"
             icon="user"
-            iconPosition="left"
+            iconposition="left"
             active={activeItem === 'logout'}
             onClick={handleLogout}
           />

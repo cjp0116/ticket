@@ -18,16 +18,6 @@ function loadTickets(tickets) {
 };
 
 
-function getTicketByID(ticketID) {
-  return async function(dispatch) {
-    const ticket = await Api.request(`${BASEURL}/${ticketID}`);
-    dispatch(getTicket(ticket))
-  };
-};
-function getTicket(ticket) {
-  return { type : 'GET_TICKET', ticket }
-};
-
 
 function postTicket() {
   return async function(dispatch) {
@@ -53,7 +43,8 @@ function updateState(ticket, ticketID) {
 
 function deleteTicket(ticketID) {
   return async function (dispatch) {
-    await Api.request(`${BASEURL}/${ticketID}`);
+    const message = await Api.request(`${BASEURL}/${ticketID}`, {}, "DELETE");
+    console.log(message);
     dispatch(removeFromState(ticketID));
   };
 };
@@ -95,4 +86,4 @@ function deleteNote(noteID, ticketID) {
   };
 };
 
-export { deleteNote, updateNote, getAllTickets, getTicketByID, postTicket, updateTicket, deleteTicket, createNote };
+export { deleteNote, updateNote, getAllTickets, postTicket, updateTicket, deleteTicket, createNote };
