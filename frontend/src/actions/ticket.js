@@ -19,14 +19,14 @@ function loadTickets(tickets) {
 
 
 
-function postTicket() {
+function postTicket(formData) {
   return async function(dispatch) {
-    const ticket = await Api.request(`${BASEURL}`);
+    const ticket = await Api.request(`${BASEURL}`, {...formData}, 'POST');
     dispatch(addTicket(ticket))
   };  
 };
 function addTicket(ticket) {
-  return { type : 'POST_TICKET', ticket }
+  return { type : 'POST_TICKET', ticket : ticket.ticket }
 };
 
 

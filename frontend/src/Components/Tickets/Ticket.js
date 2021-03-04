@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Spinner from "../../UI/Spinner";
-
+import { Container } from "semantic-ui-react";
 import Api from "../../backendAPI";
 
 
@@ -29,9 +29,9 @@ const Ticket = props => {
   if(loading) return <Spinner />
 
   return (
-    <>
+    <Container>
       <h1>Ticket #{ticket.id}</h1>
-    </>
+    </Container>
   )
 };
 export default Ticket;

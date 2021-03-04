@@ -41,7 +41,10 @@ const Navbar = props => {
                 <span className="text">New</span>
               <Dropdown.Menu>
               <Dropdown.Item>
-                <Link exact to="/newTicket">Ticket</Link>
+                <Link exact to="/newTicket">
+                  <Icon name="file alternate outline" />
+                  Ticket
+                </Link>
               </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown.Item>

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAllTickets } from "../../actions/ticket";
 import { Link } from 'react-router-dom';
 import { deleteTicket } from "../../actions/ticket";
-import { Table, Icon, Popup, Button, Confirm } from 'semantic-ui-react';
+import { Table, Icon, Popup, Button, Confirm, Container } from 'semantic-ui-react';
 import Spinner from "../../UI/Spinner";
 
 const TicketList = props => {
@@ -32,7 +32,7 @@ const TicketList = props => {
   };
 
   return (
-    <>
+    <Container fluid>
       <Table celled selectable>
         <Table.Header>
           <Table.Row textAlign="center">
@@ -101,7 +101,14 @@ const TicketList = props => {
                 </Link>
                   <Popup 
                     content={`Delete ticket ${t.id}`} 
-                    trigger={<Button icon="remove" size="small" color="red" circular onClick={() => setOpenConfirm(true)} />}
+                    trigger={
+                      <Button 
+                        icon="remove" 
+                        size="small" 
+                        color="red" 
+                        circular onClick={() => setOpenConfirm(true)} 
+                      />
+                    }
                   />
                   <Confirm 
                     open={openConfirm}
@@ -117,8 +124,7 @@ const TicketList = props => {
           ))}
         </Table.Body>
       </Table>
-    </>
-
+    </Container>
   )
 };
 

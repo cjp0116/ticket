@@ -35,7 +35,7 @@ function App() {
     history.push("/")
   }
 
-  if (loading) return Spinner;
+  if (loading) return <Spinner />;
   return (
     <AuthContext.Provider value={{ setToken, currentUser, setCurrentUser, handleLogout }}>
         <div className="App">

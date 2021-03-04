@@ -4,6 +4,7 @@ import Login from "../Components/Auth/Login";
 import TicketList from "../Components/Tickets/TicketList";
 import Ticket  from "../Components/Tickets/Ticket"
 import NewTicketForm from "../Components/Tickets/NewTicketForm";
+import SearchTicketPage from "../Components/Tickets/SearchTicket";
 
 const Routes = props => {
   return (
@@ -19,6 +20,9 @@ const Routes = props => {
       </Route>
       <Route exact path="/tickets">
         <TicketList />
+      </Route>
+      <Route exact path="/search">
+        <SearchTicketPage />
       </Route>
       <Route exact path="/tickets/:ticketID">
         <Ticket />
