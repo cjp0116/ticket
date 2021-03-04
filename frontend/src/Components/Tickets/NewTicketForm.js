@@ -7,34 +7,34 @@ import AuthContext from "../../context/AuthContext";
 const importanceLevelOptions = [
   {
     key: 1,
-    text: 'None',
+    text: '1. None',
     value: 1,
     name : "importanceLevel",
     label: { color: 'green', empty: true, circular: true }
   },
   {
     key: 2,
-    text: 'Low',
+    text: '2. Low',
     value: 2,
     name : "importanceLevel",
     label: { color: 'yellow', empty: true, circular: true }
   },
   {
     key: 3,
-    text: 'Normal',
+    text: '3. Normal',
     value: 3,
     name : "importanceLevel",
     label: { color: 'orange', empty: true, circular: true }
   },
   {
     key: 4,
-    text: 'High',
+    text: '4. High',
     value: 4,
     label: { color: 'red', empty: true, circular: true }
   },
   {
     key: 5,
-    text: 'Critical',
+    text: '5. Critical',
     value: 5,
     label: { color: 'red', empty: true, circular: true }
   }
@@ -52,9 +52,26 @@ const statusOptions = [
     value: true,
     label: { color: 'green', empty: true, circular: true }
   }
+];
+const departmentOptions = [
+  {
+    key : 'Full Stack',
+    text : 'Full Stack',
+    value : 'full-stack',
+  },
+  {
+    key : 'Front End',
+    text : 'Front End',
+    value : 'front-end'
+  },
+  {
+    key : 'Back End',
+    text : 'Back End',
+    value : 'back-end'
+  }
 ]
 const NewTicketForm = props => {
-  // const { currentUser } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
   const [error, setError] = useState(null);
   const currentDate = new Date();
   const [loading, setLoading] = useState(null);
@@ -70,6 +87,7 @@ const NewTicketForm = props => {
     notes: ""
   });
   const dispatch = useDispatch();
+  console.log(currentUser)
   const handleChange = e => {
     const { name, value } = e.target;
     setForm(form => ({ ...form, [name]: value }))
@@ -79,12 +97,12 @@ const NewTicketForm = props => {
     console.log(e.target.name)
     console.log(e.target.value)
   }
-
+  console.log(currentDate)
   const handleSubmit = e => {
     e.preventDefault();
     setLoading(true);
     dispatch(postTicket({ ...form }));
-    
+    setLoading(false);
   }
   return (
     <Container textAlign="justified">
@@ -95,6 +113,12 @@ const NewTicketForm = props => {
           placeholder={currentDate}
           readOnly
           onChange={handleChange}
+        />
+        <Form.Select
+          label="Assign Group"
+          placeholder="Select department"
+          defaultValue={departmentOptions[0].value}
+          options={departmentOptions}
         />
         <Form.Group widths='equal'>
           <Form.Input
@@ -157,7 +181,7 @@ const NewTicketForm = props => {
             defaultValue={statusOptions[0].value}
           />
         </Form.Group>
-        <Form.Button>Submit</Form.Button>
+        <Form.Button type="submit">Submit</Form.Button>
       </Form>
     </Container>
   )

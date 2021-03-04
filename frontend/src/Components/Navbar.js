@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Dropdown, Menu, Icon } from 'semantic-ui-react';
 import AuthContext from "../context/AuthContext";
 
+
 const Navbar = props => {
   const [activeItem, setActiveItem] = useState('My Tickets');
   const { handleLogout, currentUser } = useContext(AuthContext);
@@ -41,7 +42,7 @@ const Navbar = props => {
                 <span className="text">New</span>
               <Dropdown.Menu>
               <Dropdown.Item>
-                <Link exact to="/newTicket">
+                <Link to="/newTicket">
                   <Icon name="file alternate outline" />
                   Ticket
                 </Link>
@@ -50,28 +51,28 @@ const Navbar = props => {
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
-        <Link exact to="/mine">
+        <Link to="/mine">
           <Menu.Item
             name='My Tickets'
             active={activeItem === 'My Tickets'}
             onClick={() => handleItemClick('My Tickets')}
           />
         </Link>
-        <Link exact to="/group">
+        <Link to="/group">
           <Menu.Item
             name='Group Tickets'
             active={activeItem === 'Group Tickets'}
             onClick={() => handleItemClick('Group Tickets')}
           />
         </Link>
-        <Link exact to="/recent">
+        <Link to="/recent">
           <Menu.Item
             name='Recent Tickets'
             active={activeItem === 'Recent Tickets'}
             onClick={() => handleItemClick('Recent Tickets')}
           />
         </Link>
-        <Link exact to="/search">
+        <Link to="/search">
           <Menu.Item
             name='Search Tickets'
             icon="search"

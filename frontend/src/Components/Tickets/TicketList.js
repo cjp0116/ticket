@@ -1,16 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllTickets } from "../../actions/ticket";
 import { Link } from 'react-router-dom';
 import { deleteTicket } from "../../actions/ticket";
 import { Table, Icon, Popup, Button, Confirm, Container } from 'semantic-ui-react';
 import Spinner from "../../UI/Spinner";
+import AuthContext from "../../context/AuthContext";
 
 const TicketList = props => {
+  const { currentUser } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
   const dispatch = useDispatch();
+
   const tickets = useSelector(store => store.tickets);
+  const myOpenTickets = tickets.filter(t => t.assignedto === currentUser.username && !t.isresolved);
+  const myGroupTickets = tickets.filter(t => t.assignedgroup === currentUser.deptcode && !t.isresolved);
+
+  console.log("groupTix", myGroupTickets)
 
   useEffect(() => {
     if (!tickets.length) {
@@ -20,7 +27,7 @@ const TicketList = props => {
     setLoading(false);
   }, [dispatch, tickets]);
 
-  console.log(tickets)
+  console.log('my tickets', tickets)
 
   if (loading) return <Spinner />;
 
@@ -30,6 +37,81 @@ const TicketList = props => {
     setLoading(false);
     setOpenConfirm(false);
   };
+
+  const markUp = (t) => (
+    <Table.Row error={!t.isresolved} textAlign="center" key={t.id}>
+      <Table.Cell>
+        <Link to={`tickets/${t.id}`} style={{ textDecoration: 'none' }} >
+          {t.id}
+        </Link>
+      </Table.Cell>
+
+      <Table.Cell>
+        <Link to={`tickets/${t.id}`} style={{ textDecoration: 'none' }} >
+          {t.createdby}
+        </Link>
+      </Table.Cell>
+
+      <Table.Cell>
+        <Link to={`tickets/${t.id}`} style={{ textDecoration: 'none' }} >
+          {t.assignedto}
+        </Link>
+      </Table.Cell>
+
+      <Table.Cell>
+        <Link to={`tickets/${t.id}`} style={{ textDecoration: 'none' }} >
+          {t.createdat}
+        </Link>
+      </Table.Cell>
+
+      <Table.Cell error={+t.importancelevel > 3}>
+        <Link to={`tickets/${t.id}`} style={{ textDecoration: 'none' }} >
+          {+t.importancelevel}
+          {+t.importancelevel > 3 && <Icon name='attention' />}
+        </Link>
+      </Table.Cell>
+
+      <Table.Cell>
+        <Link to={`tickets/${t.id}`} style={{ textDecoration: 'none' }} >
+          {t.isresolved ? 'closed' : 'open'}
+        </Link>
+      </Table.Cell>
+
+      <Table.Cell>
+        <Link to={`tickets/${t.id}`} style={{ textDecoration: 'none' }} >
+          {t.subject}
+        </Link>
+      </Table.Cell>
+      <Table.Cell>
+        <Link to={`tickets/${t.id}`} style={{ textDecoration: 'none' }} >
+          <Popup
+            content={`Edit ticket ${t.id}`}
+            trigger={<Button icon="edit" size="small" color="green" circular />}
+          />
+        </Link>
+        <Popup
+          content={`Delete ticket ${t.id}`}
+          trigger={
+            <Button
+              icon="remove"
+              size="small"
+              color="red"
+              circular onClick={() => setOpenConfirm(true)}
+            />
+          }
+        />
+        <Confirm
+          open={openConfirm}
+          header="Delete Ticket"
+          content="The operation is irreversable, are you sure?"
+          cancelButton="Nevermind"
+          confirmButton="Delete"
+          onCancel={() => setOpenConfirm(false)}
+          onConfirm={() => handleDeleteConfirm(t.id)}
+        />
+      </Table.Cell>
+    </Table.Row>
+  );
 
   return (
     <Container fluid>
@@ -46,82 +128,8 @@ const TicketList = props => {
             <Table.HeaderCell>Actions</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
-
         <Table.Body>
-          {tickets.map(t => (
-            <Table.Row error={!t.isresolved} textAlign="center" key={t.id}>
-              <Table.Cell>
-                <Link to={`tickets/${t.id}`} style={{ textDecoration: 'none' }} >
-                  {t.id}
-                </Link>
-              </Table.Cell>
-
-              <Table.Cell>
-                <Link to={`tickets/${t.id}`} style={{ textDecoration: 'none' }} >
-                  {t.createdby}
-                </Link>
-              </Table.Cell>
-
-              <Table.Cell>
-                <Link to={`tickets/${t.id}`} style={{ textDecoration: 'none' }} >
-                  {t.assignedto}
-                </Link>
-              </Table.Cell>
-
-              <Table.Cell>
-                <Link to={`tickets/${t.id}`} style={{ textDecoration: 'none' }} >
-                  {t.createdat}
-                </Link>
-              </Table.Cell>
-
-              <Table.Cell error={+t.importancelevel > 3}>
-                <Link to={`tickets/${t.id}`} style={{ textDecoration: 'none' }} >
-                  {+t.importancelevel}
-                  {+t.importancelevel > 3 && <Icon name='attention' />}
-                </Link>
-              </Table.Cell>
-
-              <Table.Cell>
-                <Link to={`tickets/${t.id}`} style={{ textDecoration: 'none' }} >
-                  {t.isresolved ? 'closed' : 'open'}
-                </Link>
-              </Table.Cell>
-
-              <Table.Cell>
-                <Link to={`tickets/${t.id}`} style={{ textDecoration: 'none' }} >
-                  {t.subject}
-                </Link>
-              </Table.Cell>
-              <Table.Cell>
-                <Link to={`tickets/${t.id}`} style={{ textDecoration: 'none' }} >
-                  <Popup 
-                    content={`Edit ticket ${t.id}`} 
-                    trigger={<Button icon="edit" size="small" color="green" circular />}
-                  />
-                </Link>
-                  <Popup 
-                    content={`Delete ticket ${t.id}`} 
-                    trigger={
-                      <Button 
-                        icon="remove" 
-                        size="small" 
-                        color="red" 
-                        circular onClick={() => setOpenConfirm(true)} 
-                      />
-                    }
-                  />
-                  <Confirm 
-                    open={openConfirm}
-                    header="Delete Ticket"
-                    content="The operation is irreversable, are you sure?"
-                    cancelButton="Nevermind"
-                    confirmButton="Delete" 
-                    onCancel={() => setOpenConfirm(false)} 
-                    onConfirm={() => handleDeleteConfirm(t.id)}
-                  />
-              </Table.Cell>
-            </Table.Row>
-          ))}
+          {props.mine ? myOpenTickets.map(t => (markUp(t))) : myGroupTickets.map(t => markUp(t)) }
         </Table.Body>
       </Table>
     </Container>

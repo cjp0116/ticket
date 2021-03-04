@@ -44,7 +44,6 @@ function ticketReducer(state = initialState, action) {
     };
 
     case 'DELETE_NOTE': {
-
       return state;
     };
 

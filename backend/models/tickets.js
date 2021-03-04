@@ -5,7 +5,6 @@ const bcrypt = require('bcrypt');
 const BCRYPT_WORKFACTOR = 10;
 
 class Ticket {
-
   static async getAll() {
     const tickets = await db.query(`SELECT * FROM tickets`);
     for(const ticket of tickets.rows) {
@@ -16,6 +15,7 @@ class Ticket {
   }
   
   static async create(data) {
+    let notes;
     const res = await db.query(
       `INSERT INTO tickets 
         (createdBy, 
@@ -36,6 +36,14 @@ class Ticket {
         ]
     );
     const ticket = res.rows[0];
+    if(data.notes) {
+      notes = await db.query(
+        `INSERT INTO notes (ticketID, createdBy, message) 
+        VALUES ($1, $2, $3)
+        RETURNING *`, [ticketID, data.createdBy, data.message]
+      );
+      ticket.notes = notes.rows
+    }
     return ticket;
   };
 

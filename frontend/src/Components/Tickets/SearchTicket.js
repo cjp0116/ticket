@@ -10,10 +10,8 @@ const SearchTicketPage = props => {
   });
   return (
     <Container textAlign='justified'>
-      <Header as="h5" icon>
-        <Icon name="search" />
-        Search Ticket
-      </Header>
+      <Header as="h5" icon><Icon name="search" />Search Ticket</Header>
+      
     </Container>
   )
 };

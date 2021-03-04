@@ -19,6 +19,9 @@ const Routes = props => {
         <Login />
       </Route>
       <Route exact path="/tickets">
+        <TicketList mine />
+      </Route>
+      <Route exact path="/group">
         <TicketList />
       </Route>
       <Route exact path="/search">
