@@ -6,11 +6,24 @@ function setError(error) {
   return { type: 'ERROR', error }
 }
 
+function setLoading() {
+  return { type : 'LOADING' }
+}
+
+function editDate(date) {
+  return new Date(date.substr(0, 10)).toLocaleString();
+}
+
 function getAllTickets() {
   return async function (dispatch) {
     try {
+      dispatch(setLoading())
       let ticketsResults = await Api.request(BASEURL);
-      const tickets = ticketsResults.data.tickets;
+      const tickets = ticketsResults.data.tickets.map(t => {
+        const dateToString = editDate(t.createdat);
+        t.createdat = dateToString;
+        return t;
+      });
       dispatch(loadTickets(tickets))
     } catch (e) {
       console.log(e)

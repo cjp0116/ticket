@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { getAllTickets } from "../../actions/ticket";
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { deleteTicket } from "../../actions/ticket";
-import { Table, Icon, Popup, Button, Confirm, Container } from 'semantic-ui-react';
-import Spinner from "../../UI/Spinner";
+import { Table, Icon, Popup, Button, Confirm, Container, Dimmer, Loader } from 'semantic-ui-react';
 import AuthContext from "../../context/AuthContext";
 
 const TicketList = props => {
@@ -12,24 +11,20 @@ const TicketList = props => {
   const [loading, setLoading] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
   const dispatch = useDispatch();
-
+  
   const tickets = useSelector(store => store.tickets);
-  const myOpenTickets = tickets.filter(t => t.assignedto === currentUser.username && !t.isresolved);
-  const myGroupTickets = tickets.filter(t => t.assignedgroup === currentUser.deptcode && !t.isresolved);
-  const myRecentTickets = tickets.filter(t => t.assignedto === currentUser.username).sort((a,b) => b.createdat - a.createdat)
-  console.log("groupTix", myGroupTickets)
-  console.log('myRecentTix', myRecentTickets)
+  const myOpenTickets = tickets.filter(t => t.assignedto === currentUser.username && !t.isresolved) || [];
+  const myGroupTickets = tickets.filter(t => t.assignedgroup === currentUser.deptcode && !t.isresolved) || [];
+  const myRecentTickets = tickets.filter(t => t.assignedto === currentUser.username).sort((a,b) => b.createdat - a.createdat) || [];
+
   useEffect(() => {
+    setLoading(true)
     if (!tickets.length) {
       setLoading(true);
       dispatch(getAllTickets())
     }
-    setLoading(false);
-  }, [dispatch, tickets]);
-
-  console.log('my tickets', tickets)
-
-  if (loading) return <Spinner />;
+    setLoading(false)
+  }, [dispatch, tickets, loading]);
 
   const handleDeleteConfirm = (ticketID) => {
     setLoading(true);
@@ -112,7 +107,7 @@ const TicketList = props => {
       </Table.Cell>
     </Table.Row>
   );
-
+  
   return (
     <Container fluid>
       <Table celled selectable>
@@ -128,6 +123,7 @@ const TicketList = props => {
             <Table.HeaderCell>Actions</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
+        {loading && <Dimmer active inverted><Loader inverted>Loading</Loader></Dimmer>}
         <Table.Body>
           {
             props.mine ? myOpenTickets.map(t => markUp(t)) :

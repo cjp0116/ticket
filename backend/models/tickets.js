@@ -23,16 +23,18 @@ class Ticket {
           importanceLevel, 
           isResolved, 
           subject, 
-          requestDetail
+          requestDetail,
+          assignedGroup
         )
-         VALUES ($1, $2, $3, $4, $5, $6)
+         VALUES ($1, $2, $3, $4, $5, $6, $7)
          RETURNING *`, [
           data.createdBy, 
           data.assignedTo, 
           data.importanceLevel, 
           data.isResolved, 
           data.subject, 
-          data.requestDetail
+          data.requestDetail,
+          data.assignedGroup
         ]
     );
     const ticket = res.rows[0];
@@ -40,7 +42,7 @@ class Ticket {
       notes = await db.query(
         `INSERT INTO notes (ticketID, createdBy, message) 
         VALUES ($1, $2, $3)
-        RETURNING *`, [ticketID, data.createdBy, data.message]
+        RETURNING *`, [ticket.id, data.createdBy, data.notes]
       );
       ticket.notes = notes.rows
     }

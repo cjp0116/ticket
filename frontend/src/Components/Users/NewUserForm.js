@@ -11,16 +11,32 @@ import { Container, Form, Header } from "semantic-ui-react";
 //   deptCode text REFERENCES departments (deptCode) ON DELETE CASCADE,
 //   isAdmin BOOLEAN default false
 // );
-
+const departmentOptions = [
+  {
+    key : 'Full Stack',
+    text : 'Full Stack',
+    value : 'F_STACK',
+  },
+  {
+    key : 'Front End',
+    text : 'Front End',
+    value : 'F_END'
+  },
+  {
+    key : 'Back End',
+    text : 'Back End',
+    value : 'B_END'
+  }
+];
 const NewUserForm = (props) => {
   const [form, setForm] = useState({
-    username: "",
-    email: "",
-    password: "",
-    firstName: "",
-    lastName: "",
-    deptCode: "",
-    isAdmin: "",
+    username : "",
+    email : "",
+    password : "",
+    firstName : "",
+    lastName : "",
+    deptCode : "",
+    isAdmin : false,
   });
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -29,9 +45,6 @@ const NewUserForm = (props) => {
     const { name, value } = e.target;
     setForm((form) => ({ ...form, [name]: value }));
   };
-  const handleSelect = (e, data) => {
-    console.log(data.value)
-  }
   return (
     <Container textAlign="justified">
       <Header as="h2">User Registration</Header>
@@ -82,7 +95,13 @@ const NewUserForm = (props) => {
           value={form.password}
         />
         <Form.Group widths='equal'>
-
+          <Form.Select 
+            label="Department"
+            selection
+            options={departmentOptions}
+            value={form.deptCode}
+            onChange={(e, data) => setForm(form => ({ ...form, deptCode : data.value }))}
+          />
         </Form.Group>
       </Form>
     </Container>

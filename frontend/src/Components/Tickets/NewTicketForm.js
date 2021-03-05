@@ -87,7 +87,7 @@ const NewTicketForm = props => {
     requestDetail: "",
     notes: ""
   });
-  
+  const history = useHistory();
   const dispatch = useDispatch();
   
   const handleChange = e => {
@@ -101,6 +101,7 @@ const NewTicketForm = props => {
     dispatch(postTicket({ ...form }));
     console.log(form)
     setLoading(false);
+    history.push("/tickets")
   }
   return (
     <Container textAlign="justified">
