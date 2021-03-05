@@ -1,15 +1,15 @@
 const initialState = [];
 
 function editDate(date) {
-  return date.substr(0, 10);
+  date = String(date);
+  return new Date(date.substr(0, 10)).toLocaleString();
 }
 
 function ticketReducer(state = initialState, action) {
   switch(action.type) {
     case 'LOAD_TICKETS': {
       const withEdit = action.tickets.map(ticket => {
-        let dateToString = String(ticket.createdat);
-        dateToString = editDate(dateToString);
+        const dateToString = editDate(ticket.createdat);
         ticket.createdat = dateToString;
         return ticket;
       });

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext } from 'react'; 
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Form, Header, Container } from 'semantic-ui-react';
@@ -57,51 +57,49 @@ const departmentOptions = [
   {
     key : 'Full Stack',
     text : 'Full Stack',
-    value : 'full-stack',
+    value : 'F_STACK',
   },
   {
     key : 'Front End',
     text : 'Front End',
-    value : 'front-end'
+    value : 'F_END'
   },
   {
     key : 'Back End',
     text : 'Back End',
-    value : 'back-end'
+    value : 'B_END'
   }
-]
+];
+
 const NewTicketForm = props => {
-  const { currentUser } = useContext(AuthContext);
   const [error, setError] = useState(null);
   const currentDate = new Date();
   const [loading, setLoading] = useState(null);
   const [form, setForm] = useState({
     createdBy: "",
-    assignTo: "",
+    assignedTo: "",
     createdAt: currentDate,
-    importanceLevel: "",
+    importanceLevel: importanceLevelOptions[0].value,
     closedAt: "",
-    status: "",
+    isResolved : statusOptions[0].value,
+    assignedGroup : departmentOptions[0].value,
     subject: "",
     requestDetail: "",
     notes: ""
   });
+  
   const dispatch = useDispatch();
-  console.log(currentUser)
+  
   const handleChange = e => {
     const { name, value } = e.target;
     setForm(form => ({ ...form, [name]: value }))
-  }
-  
-  const handleSelect = e => {
-    console.log(e.target.name)
-    console.log(e.target.value)
-  }
-  console.log(currentDate)
+  };
+
   const handleSubmit = e => {
     e.preventDefault();
     setLoading(true);
     dispatch(postTicket({ ...form }));
+    console.log(form)
     setLoading(false);
   }
   return (
@@ -117,8 +115,12 @@ const NewTicketForm = props => {
         <Form.Select
           label="Assign Group"
           placeholder="Select department"
-          defaultValue={departmentOptions[0].value}
+          value={form.assignedGroup}
           options={departmentOptions}
+          onChange={(e, data) => setForm(form => ({ ...form, assignedGroup : data.value }))}
+          error={
+            error && { content : 'This field cannot be blank', pointing : 'below' }
+          }
         />
         <Form.Group widths='equal'>
           <Form.Input
@@ -126,7 +128,9 @@ const NewTicketForm = props => {
             iconPosition="left"
             label="Created by"
             placeholder="Username"
-            error={error}
+            error={
+              error && { content : 'Please enter a username', pointing : 'below' }
+            }
             value={form.createdBy}
             name="createdBy"
             onChange={handleChange}
@@ -139,8 +143,8 @@ const NewTicketForm = props => {
             error={
               error && { content: 'Please enter a username', pointing: 'below' }
             }
-            value={form.assignTo}
-            name="assignTo"
+            value={form.assignedTo}
+            name="assignedTo"
             onChange={handleChange}
           />
         </Form.Group>
@@ -150,6 +154,14 @@ const NewTicketForm = props => {
           onChange={handleChange}
           name="subject"
           value={form.subject}
+        />
+        <Form.TextArea 
+          label="Request Details"
+          style={{ minHeight : 100 }}
+          placeholder="Details of ticket.."
+          name="requestDetail"
+          value={form.requestDetail}
+          onChange={handleChange}
         />
         <Form.TextArea
           label='Notes'
@@ -166,9 +178,8 @@ const NewTicketForm = props => {
             label="Importance Level"
             options={importanceLevelOptions}
             name="importanceLevel"
-            onChange={handleSelect}
-            defaultValue={importanceLevelOptions[0].value}
-            // value={form.importanceLevel}
+            onChange={(e, data) => setForm(form => ({ ...form, importanceLevel : data.value}))}
+            value={form.importanceLevel}
           />
           <Form.Select
             placeholder="Ticket Status"
@@ -176,9 +187,8 @@ const NewTicketForm = props => {
             selection
             options={statusOptions}
             name="status"
-            onChange={handleSelect}
-            // value={form.status}
-            defaultValue={statusOptions[0].value}
+            onChange={(e, data) => setForm(form => ({ ...form, isResolved : data.value }))}
+            value={form.isResolved}
           />
         </Form.Group>
         <Form.Button type="submit">Submit</Form.Button>

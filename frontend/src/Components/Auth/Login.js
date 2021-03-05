@@ -25,7 +25,7 @@ const Login = (props) => {
   const handleChange = (e) => {
     setForm((form) => ({ ...form, [e.target.name]: e.target.value }));
   };
-
+  
   const handleSubmit = async (e) => {
     let token;
     let user;
@@ -38,7 +38,7 @@ const Login = (props) => {
       const { username } = decode(token);
       user = await Api.request(`http://localhost:5000/users/${username}`);
       setCurrentUser(user.data.user);
-      history.push("/")
+      history.push("/tickets")
     } catch (e) {
       console.error(e)
       setError(true);

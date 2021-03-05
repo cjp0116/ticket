@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllTickets } from "../../actions/ticket";
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { deleteTicket } from "../../actions/ticket";
 import { Table, Icon, Popup, Button, Confirm, Container } from 'semantic-ui-react';
 import Spinner from "../../UI/Spinner";
@@ -16,9 +16,9 @@ const TicketList = props => {
   const tickets = useSelector(store => store.tickets);
   const myOpenTickets = tickets.filter(t => t.assignedto === currentUser.username && !t.isresolved);
   const myGroupTickets = tickets.filter(t => t.assignedgroup === currentUser.deptcode && !t.isresolved);
-
+  const myRecentTickets = tickets.filter(t => t.assignedto === currentUser.username).sort((a,b) => b.createdat - a.createdat)
   console.log("groupTix", myGroupTickets)
-
+  console.log('myRecentTix', myRecentTickets)
   useEffect(() => {
     if (!tickets.length) {
       setLoading(true);
@@ -129,7 +129,11 @@ const TicketList = props => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {props.mine ? myOpenTickets.map(t => (markUp(t))) : myGroupTickets.map(t => markUp(t)) }
+          {
+            props.mine ? myOpenTickets.map(t => markUp(t)) :
+            props.group ? myGroupTickets.map(t => markUp(t)) :
+            props.recent && myRecentTickets.map(t => markUp(t))
+          }
         </Table.Body>
       </Table>
     </Container>
