@@ -4,11 +4,11 @@ function users(state = initialState, action) {
   switch(action.type) {
 
     case 'RESET_ALL': {
-      return initialState;
+      return [...initialState];
     };
     
     case 'LOAD_USERS': {
-      return [...state, ...action.payload ]
+      return [...state, ...action.users.users ]
     };
     
     case 'GET_USER': {

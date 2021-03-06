@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Spinner from "../../UI/Spinner";
+import Spinner from "../UI/Spinner";
 import { Container } from "semantic-ui-react";
 import Api from "../../backendAPI";
 

@@ -32,7 +32,8 @@ const Login = (props) => {
     try {
       setLoading(true);
       e.preventDefault();
-      const res = await Api.request('http://localhost:5000/login', form, 'POST')
+      const res = await Api.request('http://localhost:5000/login/', form, 'POST');
+      console.log(res.data);
       token = res.data.token;
       setToken(token);
       const { username } = decode(token);

@@ -1,54 +1,58 @@
 import React, { useState } from "react";
-import { Container, Form, Header } from "semantic-ui-react";
-
-// create table users (
-//   id serial primary key,
-//   email varchar(254) not null unique,
-//   username text not null unique,
-//   password text not null,
-//   firstName text not null,
-//   lastName text not null,
-//   deptCode text REFERENCES departments (deptCode) ON DELETE CASCADE,
-//   isAdmin BOOLEAN default false
-// );
+import { Container, Form, Header, Checkbox } from "semantic-ui-react";
+import { useDispatch, useSelector } from "react-redux";
+import { createUser  } from "../../actions/usersActions";
 const departmentOptions = [
   {
-    key : 'Full Stack',
-    text : 'Full Stack',
-    value : 'F_STACK',
+    key: "Full Stack",
+    text: "Full Stack",
+    value: "F_STACK",
   },
   {
-    key : 'Front End',
-    text : 'Front End',
-    value : 'F_END'
+    key: "Front End",
+    text: "Front End",
+    value: "F_END",
   },
   {
-    key : 'Back End',
-    text : 'Back End',
-    value : 'B_END'
-  }
+    key: "Back End",
+    text: "Back End",
+    value: "B_END",
+  },
 ];
 const NewUserForm = (props) => {
   const [form, setForm] = useState({
-    username : "",
-    email : "",
-    password : "",
-    firstName : "",
-    lastName : "",
-    deptCode : "",
-    isAdmin : false,
+    username: "",
+    email: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+    deptCode: "",
+    isAdmin: false,
   });
+  
+  const [loading, setLoading] = useState(false);
+  
+  const dispatch = useDispatch();
+  
+  const errors = useSelector(st => st.errors);
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
+    console.log(form);
+    dispatch(createUser({ ...form }));
+    setLoading(false);
   };
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((form) => ({ ...form, [name]: value }));
   };
+  
   return (
     <Container textAlign="justified">
       <Header as="h2">User Registration</Header>
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} loading={loading}>
         <Form.Group widths="equal">
           <Form.Input
             label="First Name"
@@ -94,15 +98,25 @@ const NewUserForm = (props) => {
           onChange={handleChange}
           value={form.password}
         />
-        <Form.Group widths='equal'>
-          <Form.Select 
-            label="Department"
-            selection
-            options={departmentOptions}
-            value={form.deptCode}
-            onChange={(e, data) => setForm(form => ({ ...form, deptCode : data.value }))}
-          />
-        </Form.Group>
+
+        <Form.Select
+          label="Department"
+          selection
+          options={departmentOptions}
+          value={form.deptCode}
+          onChange={(e, data) =>
+            setForm((form) => ({ ...form, deptCode: data.value }))
+          }
+        />
+        <Checkbox
+          label="Admin?"
+          checked={form.isAdmin}
+          toggle
+          onChange={(e) =>
+            setForm((form) => ({ ...form, isAdmin: !form.isAdmin }))
+          }
+        />
+        <Form.Button type="submit">Submit</Form.Button>
       </Form>
     </Container>
   );

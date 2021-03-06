@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import { getAllTickets } from "../../actions/ticket";
+import { getAllTickets } from "../../actions/ticketActions";
 import { Link } from 'react-router-dom';
-import { deleteTicket } from "../../actions/ticket";
+import { deleteTicket } from "../../actions/ticketActions";
 import { Table, Icon, Popup, Button, Confirm, Container, Dimmer, Loader } from 'semantic-ui-react';
 import AuthContext from "../../context/AuthContext";
 

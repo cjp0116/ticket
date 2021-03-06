@@ -1,9 +1,8 @@
 const initialState = [];
 
-
-
 function ticketReducer(state = initialState, action) {
   switch(action.type) {
+    
     case 'LOAD_TICKETS': {
       return [...action.tickets]
     };

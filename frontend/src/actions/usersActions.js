@@ -1,9 +1,16 @@
 import Api from "../backendAPI";
 
+function createUser(data) {
+  return async function(dispatch) {
+    const user = await Api.request('http://localhost:5000/register', { ...data }, 'POST');
+    dispatch({ type : 'ADD_USER', user : user.data.user })
+  }
+}
+
 function getUsers() {
   return async function(dispatch) {
     const users = await Api.request('http://localhost:5000/users');
-    dispatch( { type : 'LOAD_USERS', payload : users } )
+    dispatch( { type : 'LOAD_USERS',  users } )
   };
 };
 
@@ -22,4 +29,4 @@ function deleteUser(username) {
 };
 
 
-export { getUsers, getUserByUsername, deleteUser };
+export { getUsers, getUserByUsername, deleteUser, createUser };

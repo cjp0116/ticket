@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import useLocalStorage from './hooks/useLocalStorage';
 import { decode } from 'jsonwebtoken';
 import Api from "./backendAPI";
-import Spinner from "./UI/Spinner";
+import Spinner from "./Components/UI/Spinner";
 import './App.css';
 import Routes from "./Routes/Routes";
 import Navbar from "./Components/Navbar";

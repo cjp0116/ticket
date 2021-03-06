@@ -3,6 +3,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const { authRequired, ensureCorrectUser, ensureAdmin } = require("../middleware/auth");
 const Ticket = require('../models/tickets');
+const { ticketPostRules, validate } = require("../validators")
 
 // GET tickets/
 // => { tickets : [{ticket, notes : [{}] }, {ticket, notes : [{}] }]}
@@ -26,9 +27,11 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
+
+
 // POST /tickets/
 // => { ticket : { createdBy,  assignedTo, importanceLevel, closedAt, isResolved }}
-router.post("/", async (req, res, next) => {
+router.post("/", ticketPostRules(), validate ,async (req, res, next) => {
   try {
     const ticket = await Ticket.create(req.body);
     return res.status(200).json({ ticket });

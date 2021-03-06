@@ -1,8 +1,10 @@
-import React, { useState, useContext } from 'react'; 
+import React, { useState, useContext, useEffect } from 'react'; 
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { Form, Header, Container } from 'semantic-ui-react';
-import { postTicket } from "../../actions/ticket";
+import { Form, Header, Container, Message, Transition } from 'semantic-ui-react';
+
+import { postTicket } from "../../actions/ticketActions";
+import { clearErrors } from "../../actions/errorActions";
 import AuthContext from "../../context/AuthContext";
 const importanceLevelOptions = [
   {
@@ -72,7 +74,7 @@ const departmentOptions = [
 ];
 
 const NewTicketForm = props => {
-  const [error, setError] = useState(null);
+  const errors = useSelector(st => st.errors.errors);
   const currentDate = new Date();
   const [loading, setLoading] = useState(null);
   const [form, setForm] = useState({
@@ -87,9 +89,10 @@ const NewTicketForm = props => {
     requestDetail: "",
     notes: ""
   });
+
   const history = useHistory();
   const dispatch = useDispatch();
-  
+
   const handleChange = e => {
     const { name, value } = e.target;
     setForm(form => ({ ...form, [name]: value }))
@@ -99,12 +102,26 @@ const NewTicketForm = props => {
     e.preventDefault();
     setLoading(true);
     dispatch(postTicket({ ...form }));
-    console.log(form)
     setLoading(false);
-    history.push("/tickets")
   }
-  return (
+
+  const showErrorMessages = (errors) => {
+    const errorMessages = [];
+    for(const error of errors) {
+      for(const key in error) {
+        errorMessages.push(error[key])
+      }
+    };
+    return errorMessages.map((e, i) => (
+      <Transition visible animation="scale" key={i} duration={300}>
+        <Message floating error>{e}</Message>
+      </Transition>
+    ))
+  }
+
+  return (  
     <Container textAlign="justified">
+      {errors.length && showErrorMessages(errors)}
       <Header as='h2'>New Ticket</Header>
       <Form onSubmit={handleSubmit} loading={loading}>
         <Form.Input
@@ -119,9 +136,6 @@ const NewTicketForm = props => {
           value={form.assignedGroup}
           options={departmentOptions}
           onChange={(e, data) => setForm(form => ({ ...form, assignedGroup : data.value }))}
-          error={
-            error && { content : 'This field cannot be blank', pointing : 'below' }
-          }
         />
         <Form.Group widths='equal'>
           <Form.Input
@@ -129,9 +143,6 @@ const NewTicketForm = props => {
             iconPosition="left"
             label="Created by"
             placeholder="Username"
-            error={
-              error && { content : 'Please enter a username', pointing : 'below' }
-            }
             value={form.createdBy}
             name="createdBy"
             onChange={handleChange}
@@ -141,9 +152,6 @@ const NewTicketForm = props => {
             iconPosition="left"
             label="Assign To"
             placeholder="Username"
-            error={
-              error && { content: 'Please enter a username', pointing: 'below' }
-            }
             value={form.assignedTo}
             name="assignedTo"
             onChange={handleChange}

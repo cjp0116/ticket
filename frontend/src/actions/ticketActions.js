@@ -1,10 +1,7 @@
 import Api from "../backendAPI";
+import { setErrors, clearErrors } from "./errorActions";
 
 const BASEURL = `http://localhost:5000/tickets`
-
-function setError(error) {
-  return { type: 'ERROR', error }
-}
 
 function setLoading() {
   return { type : 'LOADING' }
@@ -17,6 +14,7 @@ function editDate(date) {
 function getAllTickets() {
   return async function (dispatch) {
     try {
+      dispatch(clearErrors())
       dispatch(setLoading())
       let ticketsResults = await Api.request(BASEURL);
       const tickets = ticketsResults.data.tickets.map(t => {
@@ -26,7 +24,7 @@ function getAllTickets() {
       });
       dispatch(loadTickets(tickets))
     } catch (e) {
-      console.log(e)
+      dispatch(setErrors(e))
     }
   };
 };
@@ -39,10 +37,12 @@ function loadTickets(tickets) {
 function postTicket(formData) {
   return async function (dispatch) {
     try {
-      const ticket = await Api.request(`${BASEURL}`, { ...formData }, 'POST');
-      dispatch(addTicket(ticket))
+      dispatch(clearErrors())
+      const ticketResults = await Api.request(`${BASEURL}`, { ...formData }, 'POST');
+      const ticket = ticketResults.data;
+      dispatch(addTicket(ticket));
     } catch (e) {
-      dispatch(setError(e))
+      dispatch(setErrors(e))
     }
   };
 };
@@ -54,10 +54,11 @@ function addTicket(ticket) {
 function updateTicket(ticketID) {
   return async function (dispatch) {
     try {
+      dispatch(clearErrors())
       const ticket = await Api.request(`${BASEURL}/${ticketID}`);
       dispatch(updateState(ticket, ticketID));
     } catch (e) {
-      dispatch(setError(e))
+      dispatch(setErrors(e));
     }
   };
 };
@@ -69,12 +70,12 @@ function updateState(ticket, ticketID) {
 function deleteTicket(ticketID) {
   return async function (dispatch) {
     try {
+      dispatch(clearErrors())
       const message = await Api.request(`${BASEURL}/${ticketID}`, {}, "DELETE");
-      console.log(message);
       dispatch(removeFromState(ticketID));
     } catch (e) {
       console.error(e)
-      dispatch(setError(e))
+      dispatch(setErrors(e))
     }
   };
 };
@@ -86,11 +87,12 @@ function removeFromState(ticketID) {
 function createNote(ticketID, data) {
   return async function (dispatch) {
     try {
+      dispatch(clearErrors())
       const ticket = await Api.request(`${BASEURL}/${ticketID}/notes`, { ...data }, 'POST');
       dispatch(addNote(ticket, ticketID));
     } catch (e) {
       console.error(e);
-      dispatch(setError(e))
+      dispatch(setErrors(e))
     }
   };
 };
@@ -102,11 +104,13 @@ function addNote(ticket, ticketID) {
 function updateNote(ticketID, noteID, data) {
   return async function (dispatch) {
     try {
+      dispatch(clearErrors())
       const ticket = await Api.request(`${BASEURL}/${ticketID}/notes/${noteID}`, { ...data }, 'PUT');
       dispatch(updateNoteState(noteID, ticketID, ticket));
-    } catch (e) {
+    } 
+    catch (e) {
       console.error(e);
-      dispatch(setError(e))
+      dispatch(setErrors(e))
     }
   }
 };
