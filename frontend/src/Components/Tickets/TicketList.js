@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getAllTickets } from "../../actions/ticketActions";
-import { Link } from 'react-router-dom';
 import { deleteTicket } from "../../actions/ticketActions";
-import { Table, Icon, Popup, Button, Confirm, Container, Dimmer, Loader } from 'semantic-ui-react';
+import { Table, Container, Dimmer, Loader } from 'semantic-ui-react';
 import AuthContext from "../../context/AuthContext";
+import TicketData from "./TicketData";
 
 const TicketList = props => {
   const { currentUser } = useContext(AuthContext);
@@ -33,81 +33,6 @@ const TicketList = props => {
     setOpenConfirm(false);
   };
 
-  const markUp = (t) => (
-    <Table.Row error={!t.isresolved} textAlign="center" key={t.id}>
-      <Table.Cell>
-        <Link to={`tickets/${t.id}`} style={{ textDecoration: 'none' }} >
-          {t.id}
-        </Link>
-      </Table.Cell>
-
-      <Table.Cell>
-        <Link to={`tickets/${t.id}`} style={{ textDecoration: 'none' }} >
-          {t.createdby}
-        </Link>
-      </Table.Cell>
-
-      <Table.Cell>
-        <Link to={`tickets/${t.id}`} style={{ textDecoration: 'none' }} >
-          {t.assignedto}
-        </Link>
-      </Table.Cell>
-
-      <Table.Cell>
-        <Link to={`tickets/${t.id}`} style={{ textDecoration: 'none' }} >
-          {t.createdat}
-        </Link>
-      </Table.Cell>
-
-      <Table.Cell error={+t.importancelevel > 3}>
-        <Link to={`tickets/${t.id}`} style={{ textDecoration: 'none' }} >
-          {+t.importancelevel}
-          {+t.importancelevel > 3 && <Icon name='attention' />}
-        </Link>
-      </Table.Cell>
-
-      <Table.Cell>
-        <Link to={`tickets/${t.id}`} style={{ textDecoration: 'none' }} >
-          {t.isresolved ? 'closed' : 'open'}
-        </Link>
-      </Table.Cell>
-
-      <Table.Cell>
-        <Link to={`tickets/${t.id}`} style={{ textDecoration: 'none' }} >
-          {t.subject}
-        </Link>
-      </Table.Cell>
-      <Table.Cell>
-        <Link to={`tickets/${t.id}`} style={{ textDecoration: 'none' }} >
-          <Popup
-            content={`Edit ticket ${t.id}`}
-            trigger={<Button icon="edit" size="small" color="green" circular />}
-          />
-        </Link>
-        <Popup
-          content={`Delete ticket ${t.id}`}
-          trigger={
-            <Button
-              icon="remove"
-              size="small"
-              color="red"
-              circular onClick={() => setOpenConfirm(true)}
-            />
-          }
-        />
-        <Confirm
-          open={openConfirm}
-          header="Delete Ticket"
-          content="The operation is irreversable, are you sure?"
-          cancelButton="Nevermind"
-          confirmButton="Delete"
-          onCancel={() => setOpenConfirm(false)}
-          onConfirm={() => handleDeleteConfirm(t.id)}
-        />
-      </Table.Cell>
-    </Table.Row>
-  );
-  
   return (
     <Container fluid>
       <Table celled selectable>
@@ -126,9 +51,9 @@ const TicketList = props => {
         {loading && <Dimmer active inverted><Loader inverted>Loading</Loader></Dimmer>}
         <Table.Body>
           {
-            props.mine ? myOpenTickets.map(t => markUp(t)) :
-            props.group ? myGroupTickets.map(t => markUp(t)) :
-            props.recent && myRecentTickets.map(t => markUp(t))
+            props.mine ? <TicketData tickets={myOpenTickets} openConfirm={openConfirm} setOpenConfirm={setOpenConfirm} handleDeleteConfirm={handleDeleteConfirm} />:
+            props.group ? <TicketData tickets={myGroupTickets} openConfirm={openConfirm} setOpenConfirm={setOpenConfirm} handleDeleteConfirm={handleDeleteConfirm} /> :
+            props.recent && <TicketData tickets={myRecentTickets} openConfirm={openConfirm} setOpenConfirm={setOpenConfirm} handleDeleteConfirm={handleDeleteConfirm} />
           }
         </Table.Body>
       </Table>

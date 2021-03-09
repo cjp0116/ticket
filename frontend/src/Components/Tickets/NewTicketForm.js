@@ -4,8 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Form, Header, Container, Message, Transition } from 'semantic-ui-react';
 
 import { postTicket } from "../../actions/ticketActions";
-import { clearErrors } from "../../actions/errorActions";
-import AuthContext from "../../context/AuthContext";
+import ErrorMessages from "../UI/ErrorMessages";
+
 const importanceLevelOptions = [
   {
     key: 1,
@@ -90,7 +90,6 @@ const NewTicketForm = props => {
     notes: ""
   });
 
-  const history = useHistory();
   const dispatch = useDispatch();
 
   const handleChange = e => {
@@ -105,23 +104,9 @@ const NewTicketForm = props => {
     setLoading(false);
   }
 
-  const showErrorMessages = (errors) => {
-    const errorMessages = [];
-    for(const error of errors) {
-      for(const key in error) {
-        errorMessages.push(error[key])
-      }
-    };
-    return errorMessages.map((e, i) => (
-      <Transition visible animation="scale" key={i} duration={300}>
-        <Message floating error>{e}</Message>
-      </Transition>
-    ))
-  }
-
   return (  
     <Container textAlign="justified">
-      {errors.length && showErrorMessages(errors)}
+      {errors.length && <ErrorMessages errors={errors} />}
       <Header as='h2'>New Ticket</Header>
       <Form onSubmit={handleSubmit} loading={loading}>
         <Form.Input

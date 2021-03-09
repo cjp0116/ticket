@@ -1,16 +1,25 @@
 import Api from "../backendAPI";
+import { setErrors } from "./errorActions";
 
 function createUser(data) {
   return async function(dispatch) {
-    const user = await Api.request('http://localhost:5000/register', { ...data }, 'POST');
-    dispatch({ type : 'ADD_USER', user : user.data.user })
+    try {
+      const user = await Api.request('http://localhost:5000/register', { ...data }, 'POST');
+      dispatch({ type : 'ADD_USER', user : user.data.user })
+    } catch(e) {
+      dispatch(setErrors(e));
+    }
   }
 }
 
 function getUsers() {
   return async function(dispatch) {
-    const users = await Api.request('http://localhost:5000/users');
-    dispatch( { type : 'LOAD_USERS',  users } )
+    try {
+      const users = await Api.request('http://localhost:5000/users');
+      dispatch( { type : 'LOAD_USERS',  users } )
+    } catch(e) {
+      dispatch(setErrors(e))
+    }
   };
 };
 

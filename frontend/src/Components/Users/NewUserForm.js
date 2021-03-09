@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Container, Form, Header, Checkbox } from "semantic-ui-react";
 import { useDispatch, useSelector } from "react-redux";
 import { createUser  } from "../../actions/usersActions";
+import ErrorMessages from "../UI/ErrorMessages";
+
 const departmentOptions = [
   {
     key: "Full Stack",
@@ -34,7 +36,7 @@ const NewUserForm = (props) => {
   
   const dispatch = useDispatch();
   
-  const errors = useSelector(st => st.errors);
+  const errors = useSelector(st => st.errors.errors);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -51,6 +53,9 @@ const NewUserForm = (props) => {
   
   return (
     <Container textAlign="justified">
+      {
+        errors.length && <ErrorMessages errors={errors} />
+      }
       <Header as="h2">User Registration</Header>
       <Form onSubmit={handleSubmit} loading={loading}>
         <Form.Group widths="equal">
@@ -60,6 +65,7 @@ const NewUserForm = (props) => {
             onChange={handleChange}
             name="firstName"
             value={form.firstName}
+            required
           />
           <Form.Input
             label="Last Name"
@@ -67,6 +73,7 @@ const NewUserForm = (props) => {
             onChange={handleChange}
             name="lastName"
             value={form.lastName}
+            required
           />
         </Form.Group>
 
@@ -78,6 +85,7 @@ const NewUserForm = (props) => {
           onChange={handleChange}
           name="username"
           value={form.username}
+          required
         />
         <Form.Input
           label="Email"
@@ -97,6 +105,7 @@ const NewUserForm = (props) => {
           name="password"
           onChange={handleChange}
           value={form.password}
+          required
         />
 
         <Form.Select

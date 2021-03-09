@@ -2,7 +2,7 @@ const { body, validationResult } = require("express-validator");
 
 const userRegistrationRules = () => {
   return [
-    body("email", "Invalid Email").not().isEmpty().isEmail().normalizeEmail(),
+    body("email", "Invalid Email").not().isEmpty().isEmail(),
     body("username", "username cannot be blank").not().isEmpty().trim().escape(),
     body("password", "password cannot be blank").not().isEmpty(),
     body("firstName", "firstName cannot be blank").not().isEmpty(),

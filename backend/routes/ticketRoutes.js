@@ -3,7 +3,8 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const { authRequired, ensureCorrectUser, ensureAdmin } = require("../middleware/auth");
 const Ticket = require('../models/tickets');
-const { ticketPostRules, validate } = require("../validators")
+const { ticketPostRules, validate } = require("../validators");
+const { route } = require('./authRoutes');
 
 // GET tickets/
 // => { tickets : [{ticket, notes : [{}] }, {ticket, notes : [{}] }]}
@@ -15,6 +16,17 @@ router.get("/", async (req, res, next) => {
     return next(e)
   }
 });
+
+// POST tickets/search
+// 404 if no tickets found
+router.post("/search", async (req, res, next) => {
+  try {
+    const searchResults = await Ticket.search(req.body);
+    return res.status(200).json({ searchResults })
+  } catch(e) {
+    return next(e)
+  }
+})
 
 // GET /tickets/:ticketID
 // => { ticket : { createdBy, assignedTo, createdAt, importanceLevel, closedAt, isResolved, notes : { } } }

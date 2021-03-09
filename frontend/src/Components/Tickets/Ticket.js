@@ -1,37 +1,202 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState, useContext } from "react";
+import { useParams, useHistory } from "react-router-dom";
 import Spinner from "../UI/Spinner";
-import { Container } from "semantic-ui-react";
+import {
+  Container,
+  Header,
+  Grid,
+  Divider,
+  Icon,
+  Table,
+  Comment,
+  Form,
+  Button,
+} from "semantic-ui-react";
 import Api from "../../backendAPI";
+import { useDispatch } from "react-redux";
+import { deleteTicket, createNote } from "../../actions/ticketActions";
+import AuthContext from "../../context/AuthContext";
 
-
-const Ticket = props => {
+const Ticket = (props) => {
   const { ticketID } = useParams();
   const [ticket, setTicket] = useState({});
+  const notes = ticket.notes || [];
+  const history = useHistory();
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const [note, setNote] = useState("");
+  const { currentUser } = useContext(AuthContext);
+
   useEffect(() => {
-    const fetchTicket = async () => { 
+    const fetchTicket = async () => {
       try {
         setLoading(true);
-        const ticketResults = await Api.request(`http://localhost:5000/tickets/${ticketID}`)
+        const ticketResults = await Api.request(
+          `http://localhost:5000/tickets/${ticketID}`
+        );
         const ticket = ticketResults.data.ticket;
-        setTicket({ ...ticket})
-      } catch(e) {
+        setTicket({ ...ticket });
+      } catch (e) {
         setTicket(null);
       }
       setLoading(false);
     };
-    fetchTicket()
+    fetchTicket();
   }, [ticketID]);
+  
+  const handleDelete = async ticketID => {
+    setLoading(true);
+    dispatch(deleteTicket(ticketID));
+    setLoading(false);
+    history.goBack();
+  };
+  
+  const handleNewNoteSubmission = async e => {
+    setLoading(true);
+    dispatch(createNote(ticketID, { message : note, createdby : currentUser.username }))
+    setLoading(false);
+  }
+  console.log("ticket", ticket);
 
-  console.log('ticket', ticket);
-
-  if(loading) return <Spinner />
+  if (loading) return <Spinner />;
 
   return (
-    <Container>
-      <h1>Ticket #{ticket.id}</h1>
+    <Container
+      style={{ marginTop: "1rem", boxShadow: "2px 2px 7px 0 rgb(0 0 0 / 12%)" }}
+    >
+      <Header as="h3" block>
+        Ticket #{ticket.id}
+      </Header>
+
+      <Grid>
+        <Divider horizontal>
+          <Header as="h4">
+            <Icon name="calendar" />
+            Dates
+          </Header>
+        </Divider>
+
+        <Grid.Row>
+          <Grid.Column width={6}>
+            <b>Created At :</b> {ticket.createdat}
+          </Grid.Column>
+          <Grid.Column width={6}>
+            <b>Closed At :</b> {ticket.closedat}
+          </Grid.Column>
+        </Grid.Row>
+
+        <Divider horizontal>
+          <Icon name="user" /> Client Information
+        </Divider>
+
+        <Grid.Row>
+          <Grid.Column>
+            <Table definition>
+              <Table.Body>
+                <Table.Row>
+                  <Table.Cell width={2}>Created By</Table.Cell>
+                  <Table.Cell>{ticket.createdby}</Table.Cell>
+                </Table.Row>
+                <Table.Row>
+                  <Table.Cell>Assigned To</Table.Cell>
+                  <Table.Cell>{ticket.assignedto}</Table.Cell>
+                </Table.Row>
+                <Table.Row>
+                  <Table.Cell>Assigned Group</Table.Cell>
+                  <Table.Cell>{ticket.assignedgroup}</Table.Cell>
+                </Table.Row>
+              </Table.Body>
+            </Table>
+          </Grid.Column>
+        </Grid.Row>
+
+        <Divider horizontal>Details</Divider>
+        <Grid.Row>
+          <Grid.Column>
+            <Table definition>
+              <Table.Body>
+                <Table.Row>
+                  <Table.Cell width={2}>Subject</Table.Cell>
+                  <Table.Cell>{ticket.subject}</Table.Cell>
+                </Table.Row>
+                <Table.Row>
+                  <Table.Cell>Request Details</Table.Cell>
+                  <Table.Cell>{ticket.requestdetail}</Table.Cell>
+                </Table.Row>
+              </Table.Body>
+            </Table>
+          </Grid.Column>
+        </Grid.Row>
+
+        <Divider horizontal>
+          <Icon name="file alternate" />
+          Notes
+        </Divider>
+        <Grid.Row>
+          <Grid.Column>
+            {notes.map((note) => (
+              <Comment>
+                <Comment.Content>
+                  <Comment.Author>{note.createdby}</Comment.Author>
+                  <Comment.Metadata>
+                    <div>{note.createdat}</div>
+                  </Comment.Metadata>
+                  <Comment.Text>{note.message}</Comment.Text>
+                  <Comment.Actions>
+                    <Comment.Action>Reply</Comment.Action>
+                  </Comment.Actions>
+                </Comment.Content>
+              </Comment>
+            ))}
+            <Form reply>
+              <Form.TextArea onChange={(e) => setNote(e.target.value)} value={note} placeholder="Add any notes here" />
+              <Button
+                content="Add Note"
+                labelPosition="left"
+                icon="edit"
+                primary
+                onClick={handleNewNoteSubmission}
+              />
+            </Form>
+          </Grid.Column>
+        </Grid.Row>
+
+        <Divider horizontal>
+          <Icon name="check circle outline" />
+          Status
+        </Divider>
+        <Grid.Row>
+          <Grid.Column>
+            <Table definition>
+              <Table.Body>
+                <Table.Row>
+                  <Table.Cell width={2}>Importance Level</Table.Cell>
+                  <Table.Cell>{ticket.importancelevel}</Table.Cell>
+                </Table.Row>
+                <Table.Row>
+                  <Table.Cell>Ticket Status</Table.Cell>
+                  <Table.Cell>
+                    {!ticket.isresolved ? "Open" : "Closed"}
+                  </Table.Cell>
+                </Table.Row>
+              </Table.Body>
+            </Table>
+          </Grid.Column>
+        </Grid.Row>
+
+        <Grid.Row>
+          <Grid.Column>
+            <Header block>
+              <Button onClick={() => history.goBack()}>
+                <Icon name="arrow left" />
+                Back
+              </Button>
+              <Button onClick={() => handleDelete(ticket.id)}>Delete</Button>
+            </Header>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     </Container>
-  )
+  );
 };
 export default Ticket;

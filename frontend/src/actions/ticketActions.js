@@ -137,5 +137,5 @@ export {
   postTicket,
   updateTicket,
   deleteTicket,
-  createNote
+  createNote,
 };

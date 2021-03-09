@@ -5,11 +5,72 @@ const bcrypt = require('bcrypt');
 const BCRYPT_WORKFACTOR = 10;
 
 class Ticket {
+
+  static async search(data) {
+    let baseQuery = `SELECT * FROM tickets`;
+    let whereExpressions = [];
+    let queryValues = [];
+    if(+data.importanceLevel > 5) {
+      throw new ExpressError('Please select values between 1 - 5 or completely omit it', 422)
+    };
+    if(data.dateFrom > data.dateTo) {
+      throw new ExpressError('Do you have a time machine? Check the dates again', 422);
+    }
+    if(data.ticketID) {
+      queryValues.push(+data.ticketID);
+      whereExpressions.push(`id = $${queryValues.length}`);
+    }
+    // If you supply both, it'll look in between start - end range
+    if(data.dateFrom && data.dateTo) {
+      queryValues.push(`${data.dateFrom}`);
+      queryValues.push(`${data.dateTo}`);
+      whereExpressions.push(`createdAt BETWEEN $${queryValues.length} AND $${queryValues.length}`);
+    }
+    // If you only supply end Date, it'll search for everything up to supplied date.
+    else if(data.dateTo) {
+      queryValues.push(`${data.dateTo}`);
+      whereExpressions.push(`createdAt <= $${queryValues.length}`);
+    }
+    // If you only supplyl start date, it'll search for everyfrom that supplied date to latest date.
+    else if(data.dateFrom) {
+      queryValues.push(`${data.dateFrom}`)
+      whereExpressions.push(`createdAt >= ${queryValues.length}`);
+    }
+    if(data.createdBy) {
+      queryValues.push(`%${data.createdBy}%`);
+      whereExpressions.push(`createdBy ILIKE $${queryValues.length}`);
+    }
+    if(data.assignedTo) {
+      queryValues.push(`${data.assignedTo}`);
+      whereExpressions.push(`assignedTo ILIKE $${queryValues.length}`);
+    }
+    if(data.isResolved) {
+      queryValues.push(data.isResolved);
+      whereExpressions.push(`isResolved = $${queryValues.length}`);
+    }
+    if(data.importanceLevel) {
+      queryValues.push(+data.importanceLevel);
+      whereExpressions.push(`importanceLevel = $${queryValues.length}`);
+    }
+    if(data.assignedGroup) {
+      queryValues.push(`${data.assignedGroup}`);
+      whereExpressions.push(`assignedGroup = $${queryValues.length}`);
+    }
+    if(whereExpressions.length > 0) {
+      baseQuery += " WHERE ";
+    }
+
+    let finalQuery = baseQuery + whereExpressions.join(" AND ");
+    const results = await db.query(finalQuery, queryValues);
+    return results.rows;
+  
+  };
+
   static async getAll() {
     const tickets = await db.query(`SELECT * FROM tickets`);
     for(const ticket of tickets.rows) {
       const notes = await db.query(`SELECT * FROM notes WHERE ticketID = $1`, [ticket.id]);
-      ticket.notes = notes.rows[0]
+      ticket.notes = notes.rows
     };
     return tickets.rows;
   }
