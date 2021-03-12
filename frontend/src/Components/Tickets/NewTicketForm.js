@@ -74,7 +74,7 @@ const departmentOptions = [
 ];
 
 const NewTicketForm = props => {
-
+  console.log(props)
   const dispatch = useDispatch();
   const errors = useSelector(st => st.errors.errors);
   const currentDate = new Date();
@@ -84,7 +84,7 @@ const NewTicketForm = props => {
   const [ticket, setTicket] = useState({});
 
   const [form, setForm] = useState({
-    createdBy: "",
+    createdBy: ticket.createdby || "",
     assignedTo: "",
     createdAt: currentDate,
     importanceLevel: importanceLevelOptions[0].value,
@@ -112,7 +112,7 @@ const NewTicketForm = props => {
     };
 
     fetchTicket(props.ticketID);
-  }, [props.ticketID]);
+  }, []);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -128,7 +128,9 @@ const NewTicketForm = props => {
       setSuccess(true);
     }
   }
-  console.log(ticket)
+  
+  console.log(ticket);
+
   return (  
     <Container textAlign="justified">
       {errors.length && <ErrorMessages errors={errors} />}

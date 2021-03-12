@@ -73,7 +73,7 @@ const TicketDetails = (props) => {
           open={showEdit}
           header={`Edit ticket ${t.id}`}
           content={
-            <EditTicketForm ticketID={t.id} edit />
+            <EditTicketForm ticketID={t.id} edit t />
           }
           cancelButton="Go back"
           confirmButton="Edit"

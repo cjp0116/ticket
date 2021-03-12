@@ -60,6 +60,7 @@ const Navbar = (props) => {
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
+        
         <Link to="/tickets">
           <Menu.Item
             name="My Tickets"
@@ -67,6 +68,7 @@ const Navbar = (props) => {
             onClick={() => handleItemClick("My Tickets")}
           />
         </Link>
+
         <Link to="/group">
           <Menu.Item
             name="Group Tickets"
@@ -74,6 +76,7 @@ const Navbar = (props) => {
             onClick={() => handleItemClick("Group Tickets")}
           />
         </Link>
+
         <Link to="/recent">
           <Menu.Item
             name="Recent Tickets"
@@ -81,6 +84,7 @@ const Navbar = (props) => {
             onClick={() => handleItemClick("Recent Tickets")}
           />
         </Link>
+
         <Link to="/search">
           <Menu.Item
             name="Search Tickets"
@@ -90,6 +94,7 @@ const Navbar = (props) => {
             onClick={() => handleItemClick("Search Tickets")}
           />
         </Link>
+        
         <Menu.Menu position="right">
           <Menu.Item
             name="logout"
