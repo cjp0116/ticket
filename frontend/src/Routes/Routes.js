@@ -11,7 +11,7 @@ const Routes = props => {
   return (
     <Switch>
       <Route exact path="/newTicket">
-        <NewTicketForm />
+        <NewTicketForm edit />
       </Route>
       <Route exact path="/login">
         <Login />

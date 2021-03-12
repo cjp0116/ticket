@@ -1,10 +1,10 @@
-import React, { useState, useContext, useEffect } from 'react'; 
-import { useHistory } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'; 
 import { useSelector, useDispatch } from 'react-redux';
-import { Form, Header, Container, Message, Transition } from 'semantic-ui-react';
+import { Form, Header, Container, Message } from 'semantic-ui-react';
 
 import { postTicket } from "../../actions/ticketActions";
 import ErrorMessages from "../UI/ErrorMessages";
+import Api from "../../backendAPI";
 
 const importanceLevelOptions = [
   {
@@ -74,9 +74,15 @@ const departmentOptions = [
 ];
 
 const NewTicketForm = props => {
+
+  const dispatch = useDispatch();
   const errors = useSelector(st => st.errors.errors);
   const currentDate = new Date();
+
   const [loading, setLoading] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [ticket, setTicket] = useState({});
+
   const [form, setForm] = useState({
     createdBy: "",
     assignedTo: "",
@@ -89,8 +95,24 @@ const NewTicketForm = props => {
     requestDetail: "",
     notes: ""
   });
+  
+  useEffect(() => {
+    const fetchTicket = async (ticketID) => {
+      try {
+        setLoading(true);
+        const res = await Api.request(
+          `http://localhost:5000/tickets/${ticketID}`
+        );
+        const ticket = res.data.ticket;
+        setTicket(ticket);
+      } catch (e) {
+        setTicket({});
+      }
+      setLoading(false);
+    };
 
-  const dispatch = useDispatch();
+    fetchTicket(props.ticketID);
+  }, [props.ticketID]);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -102,11 +124,15 @@ const NewTicketForm = props => {
     setLoading(true);
     dispatch(postTicket({ ...form }));
     setLoading(false);
+    if(!errors.length) {
+      setSuccess(true);
+    }
   }
-
+  console.log(ticket)
   return (  
     <Container textAlign="justified">
       {errors.length && <ErrorMessages errors={errors} />}
+      {success && <Message success header="Ticket successfully created" />}
       <Header as='h2'>New Ticket</Header>
       <Form onSubmit={handleSubmit} loading={loading}>
         <Form.Input
@@ -185,7 +211,7 @@ const NewTicketForm = props => {
             value={form.isResolved}
           />
         </Form.Group>
-        <Form.Button type="submit">Submit</Form.Button>
+        {!props.edit && <Form.Button type="submit">Submit</Form.Button>}
       </Form>
     </Container>
   )

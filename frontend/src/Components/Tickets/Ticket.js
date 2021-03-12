@@ -14,7 +14,7 @@ import {
 } from "semantic-ui-react";
 import Api from "../../backendAPI";
 import { useDispatch } from "react-redux";
-import { deleteTicket, createNote } from "../../actions/ticketActions";
+import { deleteTicket,  } from "../../actions/ticketActions";
 import AuthContext from "../../context/AuthContext";
 
 const Ticket = (props) => {
@@ -53,7 +53,9 @@ const Ticket = (props) => {
   
   const handleNewNoteSubmission = async e => {
     setLoading(true);
-    dispatch(createNote(ticketID, { message : note, createdby : currentUser.username }))
+    const res = await Api.request(`http://localhost:5000/tickets/${ticketID}/notes`, { message : note, createdBy : currentUser.username }, 'POST');
+    const updatedTicket = res.data.ticket;
+    setTicket({ ...updatedTicket });
     setLoading(false);
   }
   console.log("ticket", ticket);
@@ -142,9 +144,6 @@ const Ticket = (props) => {
                     <div>{note.createdat}</div>
                   </Comment.Metadata>
                   <Comment.Text>{note.message}</Comment.Text>
-                  <Comment.Actions>
-                    <Comment.Action>Reply</Comment.Action>
-                  </Comment.Actions>
                 </Comment.Content>
               </Comment>
             ))}

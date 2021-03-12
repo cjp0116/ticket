@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Container, Form, Header, Checkbox } from "semantic-ui-react";
+import { Container, Form, Header, Checkbox, Message } from "semantic-ui-react";
 import { useDispatch, useSelector } from "react-redux";
 import { createUser  } from "../../actions/usersActions";
 import ErrorMessages from "../UI/ErrorMessages";
@@ -33,7 +33,7 @@ const NewUserForm = (props) => {
   });
   
   const [loading, setLoading] = useState(false);
-  
+  const [success, setSuccess] = useState(false);
   const dispatch = useDispatch();
   
   const errors = useSelector(st => st.errors.errors);
@@ -49,6 +49,9 @@ const NewUserForm = (props) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((form) => ({ ...form, [name]: value }));
+    if(!errors.length) {
+      setSuccess(true);
+    }
   };
   
   return (
@@ -56,6 +59,7 @@ const NewUserForm = (props) => {
       {
         errors.length && <ErrorMessages errors={errors} />
       }
+      {success && <Message success header="Ticket successfully created" />}
       <Header as="h2">User Registration</Header>
       <Form onSubmit={handleSubmit} loading={loading}>
         <Form.Group widths="equal">
