@@ -5,6 +5,7 @@ import { Form, Header, Container, Message } from 'semantic-ui-react';
 import { postTicket } from "../../actions/ticketActions";
 import ErrorMessages from "../UI/ErrorMessages";
 import Api from "../../backendAPI";
+import { useParams } from 'react-router-dom';
 
 const importanceLevelOptions = [
   {
@@ -74,7 +75,8 @@ const departmentOptions = [
 ];
 
 const NewTicketForm = props => {
-  console.log(props)
+  console.log(props);
+  const { ticketID } = useParams()
   const dispatch = useDispatch();
   const errors = useSelector(st => st.errors.errors);
   const currentDate = new Date();
@@ -85,14 +87,14 @@ const NewTicketForm = props => {
 
   const [form, setForm] = useState({
     createdBy: ticket.createdby || "",
-    assignedTo: "",
-    createdAt: currentDate,
-    importanceLevel: importanceLevelOptions[0].value,
-    closedAt: "",
-    isResolved : statusOptions[0].value,
-    assignedGroup : departmentOptions[0].value,
-    subject: "",
-    requestDetail: "",
+    assignedTo: ticket.assignedto || "",
+    createdAt: ticket.createdat || currentDate,
+    importanceLevel: ticket.importancelevel || importanceLevelOptions[0].value,
+    closedAt: ticket.closedat || "",
+    isResolved : ticket.isresolved || statusOptions[0].value,
+    assignedGroup : ticket.assignedgroup || departmentOptions[0].value,
+    subject: ticket.subject || "",
+    requestDetail: ticket.requestdetail || "",
     notes: ""
   });
   
@@ -111,7 +113,7 @@ const NewTicketForm = props => {
       setLoading(false);
     };
 
-    fetchTicket(props.ticketID);
+    fetchTicket(ticketID);
   }, []);
 
   const handleChange = e => {
@@ -129,7 +131,7 @@ const NewTicketForm = props => {
     }
   }
   
-  console.log(ticket);
+  console.log("tickets at first", ticket);
 
   return (  
     <Container textAlign="justified">

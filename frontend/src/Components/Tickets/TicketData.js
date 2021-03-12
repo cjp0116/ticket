@@ -57,7 +57,7 @@ const TicketDetails = (props) => {
             trigger={<Button icon="edit" size="small" color="green" circular />}
           />
         </Link> */}
-        <Popup
+        {/* <Popup
           content={`Edit ticket ${t.id}`}
           trigger={
             <Button 
@@ -68,8 +68,8 @@ const TicketDetails = (props) => {
               onClick={() => setShowEdit(true)}
             />
           }
-        />
-        <Confirm 
+        /> */}
+        {/* <Confirm 
           open={showEdit}
           header={`Edit ticket ${t.id}`}
           content={
@@ -100,7 +100,7 @@ const TicketDetails = (props) => {
           confirmButton="Delete"
           onCancel={() => props.setOpenConfirm(false)}
           onConfirm={() => props.handleDeleteConfirm(t.id)}
-        />
+        /> */}
       </Table.Cell>
     </Table.Row>
   ));
