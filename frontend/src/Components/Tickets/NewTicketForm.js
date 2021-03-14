@@ -75,7 +75,7 @@ const departmentOptions = [
 ];
 
 const NewTicketForm = props => {
-  console.log(props);
+  console.log("NewTicketForm props", props);
   const { ticketID } = useParams()
   const dispatch = useDispatch();
   const errors = useSelector(st => st.errors.errors);
