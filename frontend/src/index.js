@@ -9,14 +9,14 @@ import { createStore, applyMiddleware, compose } from "redux";
 import { Provider } from "react-redux";
 import rootReducer from "./reducers/rootReducer";
 import { BrowserRouter } from "react-router-dom";
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 import "semantic-ui-css/semantic.min.css";
 
 const store = createStore(
   rootReducer,
-  compose(
-    applyMiddleware(thunk),
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+  composeWithDevTools(
+    applyMiddleware(thunk)
   )
 );
 

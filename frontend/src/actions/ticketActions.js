@@ -51,11 +51,11 @@ function addTicket(ticket) {
 };
 
 
-function updateTicket(ticketID) {
+function updateTicket(ticketID, formData) {
   return async function (dispatch) {
     try {
       dispatch(clearErrors())
-      const ticket = await Api.request(`${BASEURL}/${ticketID}`);
+      const ticket = await Api.request(`${BASEURL}/${ticketID}`, { ...formData}, 'PUT');
       dispatch(updateState(ticket, ticketID));
     } catch (e) {
       dispatch(setErrors(e));

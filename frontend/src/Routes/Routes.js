@@ -12,7 +12,7 @@ const Routes = props => {
     <Switch>
       
       <Route exact path="/newTicket">
-        <NewTicketForm />
+        <NewTicketForm edit={false} ticket={{}} />
       </Route>
       
       <Route exact path="/login">

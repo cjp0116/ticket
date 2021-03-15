@@ -1,11 +1,19 @@
 import React, { useState } from "react";
 import { Table, Confirm, Popup, Button, Icon } from "semantic-ui-react";
 import { Link } from "react-router-dom";
+import { updateTicket } from "../../actions/ticketActions";
+import { useDispatch } from 'react-redux';
 import EditTicketForm from "./NewTicketForm";
 
 
 const TicketDetails = (props) => {
   const [showEdit, setShowEdit] = useState(false);
+  const dispatch = useDispatch();
+  const handleEdit = (e, ticketID, formData) => {
+    e.preventDefault();
+    dispatch(updateTicket(ticketID, formData));
+    setShowEdit(false);
+  }
   return props.tickets.map((t) => (
     <Table.Row error={!t.isresolved} textAlign="center" key={t.id}>
       <Table.Cell>
@@ -51,12 +59,12 @@ const TicketDetails = (props) => {
         </Link>
       </Table.Cell>
       <Table.Cell>
-        <Link to={`tickets/${t.id}/edit`} style={{ textDecoration: "none" }}>
+        {/* <Link to={`tickets/${t.id}/edit`} style={{ textDecoration: "none" }}>
           <Popup
             content={`Edit ticket ${t.id}`}
             trigger={<Button icon="edit" size="small" color="green" circular />}
           />
-        </Link>
+        </Link> */}
         <Popup
           content={`Edit ticket ${t.id}`}
           trigger={
@@ -73,12 +81,12 @@ const TicketDetails = (props) => {
           open={showEdit}
           header={`Edit ticket ${t.id}`}
           content={
-            <EditTicketForm ticketID={t.id} edit t />
+            <EditTicketForm ticketID={t.id} edit ticket={t} handleEdit={handleEdit} />
           }
           cancelButton="Go back"
           confirmButton="Edit"
           onCancel={() => setShowEdit(false)}
-          onConfirm={() => setShowEdit(false)}
+          onConfirm={handleEdit}
         />
         <Popup
           content={`Delete ticket ${t.id}`}

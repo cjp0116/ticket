@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState  } from 'react'; 
 import { useSelector, useDispatch } from 'react-redux';
 import { Form, Header, Container, Message } from 'semantic-ui-react';
 
-import { postTicket } from "../../actions/ticketActions";
+import { postTicket, updateTicket } from "../../actions/ticketActions";
 import ErrorMessages from "../UI/ErrorMessages";
-import Api from "../../backendAPI";
 import { useParams } from 'react-router-dom';
 
 const importanceLevelOptions = [
@@ -83,38 +82,39 @@ const NewTicketForm = props => {
 
   const [loading, setLoading] = useState(null);
   const [success, setSuccess] = useState(null);
-  const [ticket, setTicket] = useState({});
+
+  // const [ticket, setTicket] = useState({});
 
   const [form, setForm] = useState({
-    createdBy: ticket.createdby || "",
-    assignedTo: ticket.assignedto || "",
-    createdAt: ticket.createdat || currentDate,
-    importanceLevel: ticket.importancelevel || importanceLevelOptions[0].value,
-    closedAt: ticket.closedat || "",
-    isResolved : ticket.isresolved || statusOptions[0].value,
-    assignedGroup : ticket.assignedgroup || departmentOptions[0].value,
-    subject: ticket.subject || "",
-    requestDetail: ticket.requestdetail || "",
+    createdBy: props.ticket.createdby || "",
+    assignedTo: props.ticket.assignedto || "",
+    createdAt: props.ticket.createdat || currentDate,
+    importanceLevel: props.ticket.importancelevel || importanceLevelOptions[0].value,
+    closedAt: props.ticket.closedat || "",
+    isResolved : props.ticket.isresolved || statusOptions[0].value,
+    assignedGroup : props.ticket.assignedgroup || departmentOptions[0].value,
+    subject: props.ticket.subject || "",
+    requestDetail: props.ticket.requestdetail || "",
     notes: ""
   });
   
-  useEffect(() => {
-    const fetchTicket = async (ticketID) => {
-      try {
-        setLoading(true);
-        const res = await Api.request(
-          `http://localhost:5000/tickets/${ticketID}`
-        );
-        const ticket = res.data.ticket;
-        setTicket(ticket);
-      } catch (e) {
-        setTicket({});
-      }
-      setLoading(false);
-    };
+  // useEffect(() => {
+  //   const fetchTicket = async (ticketID) => {
+  //     try {
+  //       setLoading(true);
+  //       const res = await Api.request(
+  //         `http://localhost:5000/tickets/${ticketID}`
+  //       );
+  //       const ticket = res.data.ticket;
+  //       setTicket(ticket);
+  //     } catch (e) {
+  //       setTicket({});
+  //     }
+  //     setLoading(false);
+  //   };
 
-    fetchTicket(ticketID);
-  }, []);
+  //   fetchTicket(ticketID);
+  // }, []);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -124,20 +124,19 @@ const NewTicketForm = props => {
   const handleSubmit = e => {
     e.preventDefault();
     setLoading(true);
-    dispatch(postTicket({ ...form }));
+    props.edit ? props.handleEdit(e, props.ticketID, { ...form }) : dispatch(postTicket({ ...form }))  
     setLoading(false);
     if(!errors.length) {
       setSuccess(true);
     }
   }
   
-  console.log("tickets at first", ticket);
-
+  console.log('ticket props are', props.ticket)
   return (  
     <Container textAlign="justified">
-      {errors.length && <ErrorMessages errors={errors} />}
+      {errors.length > 0 && <ErrorMessages errors={errors} />}
       {success && <Message success header="Ticket successfully created" />}
-      <Header as='h2'>New Ticket</Header>
+      <Header as='h2'>{props.edit ? 'Edit' : 'New'} Ticket</Header>
       <Form onSubmit={handleSubmit} loading={loading}>
         <Form.Input
           label="Created At"
