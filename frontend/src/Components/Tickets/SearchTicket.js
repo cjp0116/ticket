@@ -131,7 +131,7 @@ const SearchTicketPage = (props) => {
   };
 
   return (
-    <Container textAlign="justified">
+    <Container textAlign="justified" style={{ marginTop: "1rem", boxShadow: "2px 2px 7px 0 rgb(0 0 0 / 12%)", padding : "1rem" }}>
       <Icon name="search" />{" "}
       <Header as="h3" icon>
         Search Ticket

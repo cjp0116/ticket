@@ -64,7 +64,7 @@ const Ticket = (props) => {
 
   return (
     <Container
-      style={{ marginTop: "1rem", boxShadow: "2px 2px 7px 0 rgb(0 0 0 / 12%)" }}
+      style={{ marginTop: "1rem", boxShadow: "2px 2px 7px 0 rgb(0 0 0 / 12%)", padding : "0.5rem" }}
     >
       <Header as="h3" block>
         Ticket #{ticket.id}

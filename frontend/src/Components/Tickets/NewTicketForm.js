@@ -113,7 +113,7 @@ const NewTicketForm = props => {
   }
   
   return (  
-    <Container textAlign="justified">
+    <Container textAlign="justified" style={{ marginTop: "1rem", boxShadow: "2px 2px 7px 0 rgb(0 0 0 / 12%)", padding : "1rem" }}>
       {errors.length > 0 && <ErrorMessages errors={errors} />}
       {success && <Message success header="Ticket successfully created" />}
       <Header as='h2'>{props.edit ? 'Edit' : 'New'} Ticket</Header>
@@ -194,7 +194,7 @@ const NewTicketForm = props => {
             value={form.isResolved}
           />
         </Form.Group>
-        {!props.edit && <Form.Button type="submit">Submit</Form.Button>}
+        {!props.edit && <Form.Button type="submit" secondary>Submit</Form.Button>}
       </Form>
     </Container>
   )

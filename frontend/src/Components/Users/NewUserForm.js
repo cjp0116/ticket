@@ -55,9 +55,9 @@ const NewUserForm = (props) => {
   };
   
   return (
-    <Container textAlign="justified">
+    <Container textAlign="justified" style={{ marginTop: "1rem", boxShadow: "2px 2px 7px 0 rgb(0 0 0 / 12%)", padding : "1rem" }}>
       {
-        errors.length && <ErrorMessages errors={errors} />
+        errors.length > 0 && <ErrorMessages errors={errors} />
       }
       {success && <Message success header="Ticket successfully created" />}
       <Header as="h2">User Registration</Header>
@@ -129,7 +129,7 @@ const NewUserForm = (props) => {
             setForm((form) => ({ ...form, isAdmin: !form.isAdmin }))
           }
         />
-        <Form.Button type="submit">Submit</Form.Button>
+        <Form.Button secondary type="submit" style={{ marginTop : "1rem"}}>Submit</Form.Button>
       </Form>
     </Container>
   );
