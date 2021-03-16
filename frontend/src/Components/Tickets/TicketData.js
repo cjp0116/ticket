@@ -1,20 +1,36 @@
 import React, { useState } from "react";
 import { Table, Confirm, Popup, Button, Icon } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import { updateTicket } from "../../actions/ticketActions";
+import { updateTicket, deleteTicket } from "../../actions/ticketActions";
 import { useDispatch } from 'react-redux';
 import EditTicketForm from "./NewTicketForm";
+import TicketModals from "./TicketModals";
 
-
-const TicketDetails = (props) => {
-  const [showEdit, setShowEdit] = useState(false);
+const TicketData = (props) => {
   const dispatch = useDispatch();
+
+  const [showEdit, setShowEdit] = useState(false);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [clickedTicket, setClickedTicket] = useState(null);
+
+  const handleDeleteConfirm = ticketID => {
+    setLoading(true);
+    dispatch(deleteTicket(ticketID));
+    setLoading(false);
+    setOpenConfirm(false);    
+  }
+  
   const handleEdit = (e, ticketID, formData) => {
     e.preventDefault();
     dispatch(updateTicket(ticketID, formData));
     setShowEdit(false);
   }
-  
+    
+  console.log('clicked ticket', clickedTicket)
+  console.log('showEdit', showEdit);
+  console.log('openConfirm', openConfirm);
+
   return props.tickets.map((t) => (
     <Table.Row error={!t.isresolved} textAlign="center" key={t.id}>
       <Table.Cell>
@@ -60,59 +76,19 @@ const TicketDetails = (props) => {
         </Link>
       </Table.Cell>
       <Table.Cell>
-        {/* <Link to={`tickets/${t.id}/edit`} style={{ textDecoration: "none" }}>
-          <Popup
-            content={`Edit ticket ${t.id}`}
-            trigger={<Button icon="edit" size="small" color="green" circular />}
-          />
-        </Link> */}
-        <Popup
-          content={`Edit ticket ${t.id}`}
-          trigger={
-            <Button 
-              icon="edit" 
-              size="small" 
-              color="green" 
-              circular 
-              onClick={() => setShowEdit(true)}
-            />
-          }
+        <TicketModals 
+          ticketID={t.id}
+          typeOfConfirm="edit"
+          ticket={t}
         />
-        <Confirm 
-          open={showEdit}
-          header={`Edit ticket ${t.id}`}
-          content={
-            <EditTicketForm ticketID={t.id} edit ticket={t} handleEdit={handleEdit} />
-          }
-          cancelButton="Go back"
-          confirmButton="Edit"
-          onCancel={() => setShowEdit(false)}
-          onConfirm={handleEdit}
-        />
-        <Popup
-          content={`Delete ticket ${t.id}`}
-          trigger={
-            <Button
-              icon="remove"
-              size="small"
-              color="red"
-              circular
-              onClick={() => props.setOpenConfirm(true)}
-            />
-          }
-        />
-        <Confirm
-          open={props.openConfirm}
-          header="Delete Ticket"
-          content="The operation is irreversable, are you sure?"
-          cancelButton="Nevermind"
-          confirmButton="Delete"
-          onCancel={() => props.setOpenConfirm(false)}
-          onConfirm={() => props.handleDeleteConfirm(t.id)}
+        <TicketModals 
+          ticketID={t.id}
+          typeOfConfirm="remove"
+          ticket={t}
         />
       </Table.Cell>
     </Table.Row>
   ));
 };
 
-export default TicketDetails;
+export default TicketData;
