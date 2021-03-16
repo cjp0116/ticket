@@ -14,6 +14,7 @@ const TicketDetails = (props) => {
     dispatch(updateTicket(ticketID, formData));
     setShowEdit(false);
   }
+  
   return props.tickets.map((t) => (
     <Table.Row error={!t.isresolved} textAlign="center" key={t.id}>
       <Table.Cell>
