@@ -1,8 +1,11 @@
 import React, { useState } from "react";
-import { Popup, Confirm, Button } from "semantic-ui-react";
+import { Popup, Confirm, Button, Form } from "semantic-ui-react";
+import { updateTicket, deleteTicket } from "../../actions/ticketActions";
+import { useDispatch } from 'react-redux';
 import EditTicketForm from "./NewTicketForm";
 
 const TicketModals = (props) => {
+  const dispatch = useDispatch();
   const [showForm, setShowForm] = useState({
     edit: false,
     remove: false,
@@ -16,6 +19,14 @@ const TicketModals = (props) => {
     setShowForm(state => ({ ...state, remove : !state.remove }))
   };
   
+  const handleDeleteTicket = ticketID => {
+    dispatch(deleteTicket(ticketID));
+  }
+
+  const submitUpdate = (ticketID, form) => {
+    dispatch(updateTicket(ticketID, form))
+  }
+
   return (
     <>
       <Popup
@@ -30,12 +41,12 @@ const TicketModals = (props) => {
           />
         }
       />
-      <Confirm 
+      <Confirm
         open={props.typeOfConfirm === 'edit' ? showForm.edit : showForm.remove}
         header={props.typeOfConfirm === 'edit' ? `Edit ticket ${props.ticketID}` : `Delete ticket ${props.ticketID}`}
         content={
           props.typeOfConfirm === 'edit' ? 
-          <EditTicketForm ticketID={props.ticketID} edit ticket={props.ticket}/> :
+          <EditTicketForm ticketID={props.ticketID} edit ticket={props.ticket} submitUpdate={submitUpdate} /> :
           'The operation is irreversable, are you sure?'
         }
         cancelButton="Go back"
@@ -44,7 +55,9 @@ const TicketModals = (props) => {
           props.typeOfConfirm === 'edit' ? toggleEdit : toggleRemove
         }
         onConfirm={
-          props.typeOfConfirm === 'edit' ? () => {} : () => {}
+          props.typeOfConfirm === 'edit' ? 
+          submitUpdate : 
+          () => handleDeleteTicket(props.ticketID)
         }
       />
     </>

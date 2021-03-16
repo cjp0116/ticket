@@ -12,7 +12,6 @@ import {
 import Api from "../../backendAPI";
 import TicketData from "./TicketData";
 import { useDispatch } from "react-redux";
-import { deleteTicket } from "../../actions/ticketActions";
 const importanceLevelOptions = [
   {
     key: 1,
@@ -103,17 +102,10 @@ const SearchTicketPage = (props) => {
     assignedGroup: "",
   });
   const [loading, setLoading] = useState(false);
-  const [openConfirm, setOpenConfirm] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setSearchFields((s) => ({ ...s, [name]: value }));
-  };
-  const handleDeleteConfirm = (ticketID) => {
-    setLoading(true);
-    dispatch(deleteTicket(ticketID));
-    setLoading(false);
-    setOpenConfirm(false);
   };
 
   const sendHTTPSearch = async (searchFields) => {
@@ -245,9 +237,9 @@ const SearchTicketPage = (props) => {
             <Loader inverted>Loading</Loader>
           </Dimmer>
         )}
-        <Table.Body>{tickets.map(t => (
-          <TicketData tickets={tickets} handleDeleteConfirm={handleDeleteConfirm} openConfirm={openConfirm} setOpenConfirm={setOpenConfirm} />
-        ))}</Table.Body>
+        <Table.Body>
+          <TicketData tickets={tickets} />
+        </Table.Body>
       </Table>
     </Container>
   );

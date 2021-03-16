@@ -1,36 +1,9 @@
-import React, { useState } from "react";
-import { Table, Confirm, Popup, Button, Icon } from "semantic-ui-react";
+import React from "react";
+import { Table, Icon } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import { updateTicket, deleteTicket } from "../../actions/ticketActions";
-import { useDispatch } from 'react-redux';
-import EditTicketForm from "./NewTicketForm";
 import TicketModals from "./TicketModals";
 
 const TicketData = (props) => {
-  const dispatch = useDispatch();
-
-  const [showEdit, setShowEdit] = useState(false);
-  const [openConfirm, setOpenConfirm] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [clickedTicket, setClickedTicket] = useState(null);
-
-  const handleDeleteConfirm = ticketID => {
-    setLoading(true);
-    dispatch(deleteTicket(ticketID));
-    setLoading(false);
-    setOpenConfirm(false);    
-  }
-  
-  const handleEdit = (e, ticketID, formData) => {
-    e.preventDefault();
-    dispatch(updateTicket(ticketID, formData));
-    setShowEdit(false);
-  }
-    
-  console.log('clicked ticket', clickedTicket)
-  console.log('showEdit', showEdit);
-  console.log('openConfirm', openConfirm);
-
   return props.tickets.map((t) => (
     <Table.Row error={!t.isresolved} textAlign="center" key={t.id}>
       <Table.Cell>
@@ -53,7 +26,7 @@ const TicketData = (props) => {
 
       <Table.Cell>
         <Link to={`tickets/${t.id}`} style={{ textDecoration: "none" }}>
-          {t.createdat}
+          {new Date(t.createdat.substr(0, 10)).toLocaleString()}
         </Link>
       </Table.Cell>
 

@@ -74,16 +74,13 @@ const departmentOptions = [
 ];
 
 const NewTicketForm = props => {
-  console.log("NewTicketForm props", props);
-  const { ticketID } = useParams()
+
   const dispatch = useDispatch();
   const errors = useSelector(st => st.errors.errors);
   const currentDate = new Date();
 
   const [loading, setLoading] = useState(null);
   const [success, setSuccess] = useState(null);
-
-  // const [ticket, setTicket] = useState({});
 
   const [form, setForm] = useState({
     createdBy: props.ticket.createdby || "",
@@ -98,23 +95,6 @@ const NewTicketForm = props => {
     notes: ""
   });
   
-  // useEffect(() => {
-  //   const fetchTicket = async (ticketID) => {
-  //     try {
-  //       setLoading(true);
-  //       const res = await Api.request(
-  //         `http://localhost:5000/tickets/${ticketID}`
-  //       );
-  //       const ticket = res.data.ticket;
-  //       setTicket(ticket);
-  //     } catch (e) {
-  //       setTicket({});
-  //     }
-  //     setLoading(false);
-  //   };
-
-  //   fetchTicket(ticketID);
-  // }, []);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -124,14 +104,14 @@ const NewTicketForm = props => {
   const handleSubmit = e => {
     e.preventDefault();
     setLoading(true);
-    props.edit ? props.handleEdit(e, props.ticketID, { ...form }) : dispatch(postTicket({ ...form }))  
+    console.log('form is', form)
+    props.edit ? props.submitUpdate(props.ticketID, { ...form }) : dispatch(postTicket({ ...form }))  
     setLoading(false);
     if(!errors.length) {
       setSuccess(true);
     }
   }
   
-  console.log('ticket props are', props.ticket)
   return (  
     <Container textAlign="justified">
       {errors.length > 0 && <ErrorMessages errors={errors} />}
