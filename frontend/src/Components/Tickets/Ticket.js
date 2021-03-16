@@ -14,7 +14,7 @@ import {
 } from "semantic-ui-react";
 import Api from "../../backendAPI";
 import { useDispatch } from "react-redux";
-import { deleteTicket,  } from "../../actions/ticketActions";
+import { deleteTicket, } from "../../actions/ticketActions";
 import AuthContext from "../../context/AuthContext";
 
 const Ticket = (props) => {
@@ -43,17 +43,17 @@ const Ticket = (props) => {
     };
     fetchTicket();
   }, [ticketID]);
-  
+
   const handleDelete = async ticketID => {
     setLoading(true);
     dispatch(deleteTicket(ticketID));
     setLoading(false);
     history.goBack();
   };
-  
+
   const handleNewNoteSubmission = async e => {
     setLoading(true);
-    const res = await Api.request(`http://localhost:5000/tickets/${ticketID}/notes`, { message : note, createdBy : currentUser.username }, 'POST');
+    const res = await Api.request(`http://localhost:5000/tickets/${ticketID}/notes`, { message: note, createdBy: currentUser.username }, 'POST');
     const updatedTicket = res.data.ticket;
     setTicket({ ...updatedTicket });
     setLoading(false);
@@ -64,7 +64,7 @@ const Ticket = (props) => {
 
   return (
     <Container
-      style={{ marginTop: "1rem", boxShadow: "2px 2px 7px 0 rgb(0 0 0 / 12%)", padding : "0.5rem" }}
+      style={{ marginTop: "1rem", boxShadow: "2px 2px 7px 0 rgb(0 0 0 / 12%)", padding: "0.5rem" }}
     >
       <Header as="h3" block>
         Ticket #{ticket.id}
@@ -80,10 +80,10 @@ const Ticket = (props) => {
 
         <Grid.Row>
           <Grid.Column width={6}>
-            <b>Created At :</b> {ticket.createdat}
+            <b>Created At :</b> {ticket.createdat && ticket.createdat.substr(0, 10)}
           </Grid.Column>
           <Grid.Column width={6}>
-            <b>Closed At :</b> {ticket.closedat}
+            <b>Closed At :</b> {ticket.closedat && ticket.closedat.substr(0, 10)}
           </Grid.Column>
         </Grid.Row>
 
