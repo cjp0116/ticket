@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Container, Form, Header, Checkbox, Message } from "semantic-ui-react";
 import { useDispatch, useSelector } from "react-redux";
-import { createUser  } from "../../actions/usersActions";
+import { createUser } from "../../actions/usersActions";
 import ErrorMessages from "../UI/ErrorMessages";
 
 const departmentOptions = [
@@ -31,11 +31,11 @@ const NewUserForm = (props) => {
     deptCode: "",
     isAdmin: false,
   });
-  
+
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const dispatch = useDispatch();
-  
+
   const errors = useSelector(st => st.errors.errors);
 
   const handleSubmit = (e) => {
@@ -45,19 +45,19 @@ const NewUserForm = (props) => {
     dispatch(createUser({ ...form }));
     setLoading(false);
   };
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((form) => ({ ...form, [name]: value }));
-    if(!errors.length) {
+    if (!errors.length) {
       setSuccess(true);
     }
   };
-  
+
   return (
-    <Container textAlign="justified">
+    <Container textAlign="justified" style={{ marginTop: "1rem", boxShadow: "2px 2px 7px 0 rgb(0 0 0 / 12%)", padding: "1rem" }}>
       {
-        errors.length && <ErrorMessages errors={errors} />
+        errors.length > 0 && <ErrorMessages errors={errors} />
       }
       {success && <Message success header="Ticket successfully created" />}
       <Header as="h2">User Registration</Header>
@@ -129,7 +129,7 @@ const NewUserForm = (props) => {
             setForm((form) => ({ ...form, isAdmin: !form.isAdmin }))
           }
         />
-        <Form.Button type="submit">Submit</Form.Button>
+        <Form.Button secondary type="submit" style={{ marginTop: "1rem" }}>Submit</Form.Button>
       </Form>
     </Container>
   );
