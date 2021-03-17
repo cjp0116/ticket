@@ -15,7 +15,7 @@ class Api {
     } catch(e) {
       console.error('API Error :', e.response);
       let errors = e.response.data.errors;
-      throw errors;
+      throw Array.isArray(errors) ? errors : [errors];
     };
   };
 };

@@ -106,7 +106,7 @@ const NewTicketForm = (props) => {
     console.log('form is', form)
     props.edit ? dispatch(updateTicket(props.ticketID, { ...form })) : dispatch(postTicket({ ...form }))
     setLoading(false);
-    if (!errors.length) {
+    if (!errors) {
       setSuccess(true);
     }
   }
