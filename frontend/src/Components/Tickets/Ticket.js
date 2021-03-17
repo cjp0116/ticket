@@ -183,7 +183,7 @@ const Ticket = (props) => {
           </Grid.Column>
         </Grid.Row>
 
-        <Grid.Row>
+        {/* <Grid.Row>
           <Grid.Column>
             <Header block>
               <Button onClick={() => history.goBack()}>
@@ -193,7 +193,15 @@ const Ticket = (props) => {
               <Button onClick={() => handleDelete(ticket.id)}>Delete</Button>
             </Header>
           </Grid.Column>
-        </Grid.Row>
+        </Grid.Row> */}
+        <Button.Group attached="bottom" fluid floated="right">
+          <Button secondary>
+            <Icon name="arrow left" />Back
+          </Button>
+          <Button negative>
+              Delete
+          </Button>
+        </Button.Group>
       </Grid>
     </Container>
   );

@@ -55,12 +55,12 @@ const NewUserForm = (props) => {
   };
   
   return (
-    <Container textAlign="justified">
+    <Container textAlign="justified" textAlign="justified" style={{ marginTop: "1rem", boxShadow: "2px 2px 7px 0 rgb(0 0 0 / 12%)", padding : '0.5rem' }}>
       {
         errors.length && <ErrorMessages errors={errors} />
       }
       {success && <Message success header="Ticket successfully created" />}
-      <Header as="h2">User Registration</Header>
+      <Header as="h2" style={{ marginTop : '2rem'}}>User Registration</Header>
       <Form onSubmit={handleSubmit} loading={loading}>
         <Form.Group widths="equal">
           <Form.Input
@@ -129,7 +129,7 @@ const NewUserForm = (props) => {
             setForm((form) => ({ ...form, isAdmin: !form.isAdmin }))
           }
         />
-        <Form.Button type="submit">Submit</Form.Button>
+        <Form.Button style={{ marginTop : '2rem'}} type="submit" secondary>Submit</Form.Button>
       </Form>
     </Container>
   );

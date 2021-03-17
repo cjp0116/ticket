@@ -1,82 +1,81 @@
-import React, { useState  } from 'react'; 
-import { useSelector, useDispatch } from 'react-redux';
-import { Form, Header, Container, Message } from 'semantic-ui-react';
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Form, Header, Container, Message } from "semantic-ui-react";
 
 import { postTicket, updateTicket } from "../../actions/ticketActions";
 import ErrorMessages from "../UI/ErrorMessages";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 
 const importanceLevelOptions = [
   {
     key: 1,
-    text: '1. None',
+    text: "1. None",
     value: 1,
-    name : "importanceLevel",
-    label: { color: 'green', empty: true, circular: true }
+    name: "importanceLevel",
+    label: { color: "green", empty: true, circular: true },
   },
   {
     key: 2,
-    text: '2. Low',
+    text: "2. Low",
     value: 2,
-    name : "importanceLevel",
-    label: { color: 'yellow', empty: true, circular: true }
+    name: "importanceLevel",
+    label: { color: "yellow", empty: true, circular: true },
   },
   {
     key: 3,
-    text: '3. Normal',
+    text: "3. Normal",
     value: 3,
-    name : "importanceLevel",
-    label: { color: 'orange', empty: true, circular: true }
+    name: "importanceLevel",
+    label: { color: "orange", empty: true, circular: true },
   },
   {
     key: 4,
-    text: '4. High',
+    text: "4. High",
     value: 4,
-    label: { color: 'red', empty: true, circular: true }
+    label: { color: "red", empty: true, circular: true },
   },
   {
     key: 5,
-    text: '5. Critical',
+    text: "5. Critical",
     value: 5,
-    label: { color: 'red', empty: true, circular: true }
-  }
+    label: { color: "red", empty: true, circular: true },
+  },
 ];
 const statusOptions = [
   {
-    key: 'Open',
-    text: 'Open',
+    key: "Open",
+    text: "Open",
     value: false,
-    label: { color: 'red', empty: true, circular: true }
+    label: { color: "red", empty: true, circular: true },
   },
   {
-    key: 'Closed',
-    text: 'Closed',
+    key: "Closed",
+    text: "Closed",
     value: true,
-    label: { color: 'green', empty: true, circular: true }
-  }
+    label: { color: "green", empty: true, circular: true },
+  },
 ];
 const departmentOptions = [
   {
-    key : 'Full Stack',
-    text : 'Full Stack',
-    value : 'F_STACK',
+    key: "Full Stack",
+    text: "Full Stack",
+    value: "F_STACK",
   },
   {
-    key : 'Front End',
-    text : 'Front End',
-    value : 'F_END'
+    key: "Front End",
+    text: "Front End",
+    value: "F_END",
   },
   {
-    key : 'Back End',
-    text : 'Back End',
-    value : 'B_END'
-  }
+    key: "Back End",
+    text: "Back End",
+    value: "B_END",
+  },
 ];
 
-const NewTicketForm = props => {
-
+const NewTicketForm = (props) => {
   const dispatch = useDispatch();
-  const errors = useSelector(st => st.errors.errors);
+  const errors = useSelector((st) => st.errors.errors);
   const currentDate = new Date();
 
   const [loading, setLoading] = useState(null);
@@ -86,37 +85,41 @@ const NewTicketForm = props => {
     createdBy: props.ticket.createdby || "",
     assignedTo: props.ticket.assignedto || "",
     createdAt: props.ticket.createdat || currentDate,
-    importanceLevel: props.ticket.importancelevel || importanceLevelOptions[0].value,
+    importanceLevel:
+      props.ticket.importancelevel || importanceLevelOptions[0].value,
     closedAt: props.ticket.closedat || "",
-    isResolved : props.ticket.isresolved || statusOptions[0].value,
-    assignedGroup : props.ticket.assignedgroup || departmentOptions[0].value,
+    isResolved: props.ticket.isresolved || statusOptions[0].value,
+    assignedGroup: props.ticket.assignedgroup || departmentOptions[0].value,
     subject: props.ticket.subject || "",
     requestDetail: props.ticket.requestdetail || "",
-    notes: ""
+    notes: "",
   });
-  
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm(form => ({ ...form, [name]: value }))
+    setForm((form) => ({ ...form, [name]: value }));
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log('form is', form)
-    props.edit ? props.submitUpdate(props.ticketID, { ...form }) : dispatch(postTicket({ ...form }))  
+    console.log("form is", form);
+    props.edit
+      ? props.submitUpdate(props.ticketID, { ...form })
+      : dispatch(postTicket({ ...form }));
     setLoading(false);
-    if(!errors.length) {
+    if (!errors.length) {
       setSuccess(true);
     }
-  }
-  
-  return (  
+  };
+
+  return (
     <Container textAlign="justified">
       {errors.length > 0 && <ErrorMessages errors={errors} />}
       {success && <Message success header="Ticket successfully created" />}
-      <Header as='h2'>{props.edit ? 'Edit' : 'New'} Ticket</Header>
+      <Header as="h2" style={{ marginTop : '2rem'}}>
+        {props.edit ? "Edit" : "New"} Ticket
+      </Header>
       <Form onSubmit={handleSubmit} loading={loading}>
         <Form.Input
           label="Created At"
@@ -129,9 +132,11 @@ const NewTicketForm = props => {
           placeholder="Select department"
           value={form.assignedGroup}
           options={departmentOptions}
-          onChange={(e, data) => setForm(form => ({ ...form, assignedGroup : data.value }))}
+          onChange={(e, data) =>
+            setForm((form) => ({ ...form, assignedGroup: data.value }))
+          }
         />
-        <Form.Group widths='equal'>
+        <Form.Group widths="equal">
           <Form.Input
             icon="user"
             iconPosition="left"
@@ -153,21 +158,21 @@ const NewTicketForm = props => {
         </Form.Group>
         <Form.Input
           label="Subject"
-          placeholder='Subject'
+          placeholder="Subject"
           onChange={handleChange}
           name="subject"
           value={form.subject}
         />
-        <Form.TextArea 
+        <Form.TextArea
           label="Request Details"
-          style={{ minHeight : 100 }}
+          style={{ minHeight: 100 }}
           placeholder="Details of ticket.."
           name="requestDetail"
           value={form.requestDetail}
           onChange={handleChange}
         />
         <Form.TextArea
-          label='Notes'
+          label="Notes"
           style={{ minHeight: 100 }}
           placeholder="notes"
           name="notes"
@@ -181,7 +186,9 @@ const NewTicketForm = props => {
             label="Importance Level"
             options={importanceLevelOptions}
             name="importanceLevel"
-            onChange={(e, data) => setForm(form => ({ ...form, importanceLevel : data.value}))}
+            onChange={(e, data) =>
+              setForm((form) => ({ ...form, importanceLevel: data.value }))
+            }
             value={form.importanceLevel}
           />
           <Form.Select
@@ -190,14 +197,24 @@ const NewTicketForm = props => {
             selection
             options={statusOptions}
             name="status"
-            onChange={(e, data) => setForm(form => ({ ...form, isResolved : data.value }))}
+            onChange={(e, data) =>
+              setForm((form) => ({ ...form, isResolved: data.value }))
+            }
             value={form.isResolved}
           />
         </Form.Group>
-        {!props.edit && <Form.Button type="submit">Submit</Form.Button>}
+        {!props.edit ? (
+          <Form.Button secondary type="submit">
+            Submit
+          </Form.Button>
+        ) : (
+          <Form.Button type="submit" secondary hidden>
+            Submit
+          </Form.Button>
+        )}
       </Form>
     </Container>
-  )
+  );
 };
 
 export default NewTicketForm;

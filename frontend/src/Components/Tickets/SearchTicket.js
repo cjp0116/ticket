@@ -131,7 +131,7 @@ const SearchTicketPage = (props) => {
   };
 
   return (
-    <Container textAlign="justified">
+    <Container textAlign="justified" style={{ marginTop: "1rem", boxShadow: "2px 2px 7px 0 rgb(0 0 0 / 12%)", padding : '0.5rem' }}>
       <Icon name="search" />{" "}
       <Header as="h3" icon>
         Search Ticket
@@ -217,8 +217,9 @@ const SearchTicketPage = (props) => {
             }
           />
         </Form.Group>
-        <Form.Button type="submit">Search</Form.Button>
+        <Form.Button type="submit" secondary>Search</Form.Button>
       </Form>
+
       <Table celled selectable>
         <Table.Header>
           <Table.Row textAlign="center">
