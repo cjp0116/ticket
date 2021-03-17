@@ -148,13 +148,19 @@ const Ticket = (props) => {
               </Comment>
             ))}
             <Form reply>
-              <Form.TextArea onChange={(e) => setNote(e.target.value)} value={note} placeholder="Add any notes here" />
+              <Form.TextArea 
+                onChange={(e) => setNote(e.target.value)} 
+                value={note} 
+                placeholder="Add any notes here"
+                rows={6} 
+              />
               <Button
                 content="Add Note"
                 labelPosition="left"
                 icon="edit"
                 primary
                 onClick={handleNewNoteSubmission}
+                floated="right"
               />
             </Form>
           </Grid.Column>
