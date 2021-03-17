@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Form, Header, Container, Message } from "semantic-ui-react";
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { Form, Header, Container, Message } from 'semantic-ui-react';
 
 import { postTicket, updateTicket } from "../../actions/ticketActions";
 import ErrorMessages from "../UI/ErrorMessages";
@@ -12,21 +12,21 @@ const importanceLevelOptions = [
     text: "1. None",
     value: 1,
     name: "importanceLevel",
-    label: { color: "green", empty: true, circular: true },
+    label: { color: 'green', empty: true, circular: true }
   },
   {
     key: 2,
     text: "2. Low",
     value: 2,
     name: "importanceLevel",
-    label: { color: "yellow", empty: true, circular: true },
+    label: { color: 'yellow', empty: true, circular: true }
   },
   {
     key: 3,
     text: "3. Normal",
     value: 3,
     name: "importanceLevel",
-    label: { color: "orange", empty: true, circular: true },
+    label: { color: 'orange', empty: true, circular: true }
   },
   {
     key: 4,
@@ -57,25 +57,25 @@ const statusOptions = [
 ];
 const departmentOptions = [
   {
-    key: "Full Stack",
-    text: "Full Stack",
-    value: "F_STACK",
+    key: 'Full Stack',
+    text: 'Full Stack',
+    value: 'F_STACK',
   },
   {
-    key: "Front End",
-    text: "Front End",
-    value: "F_END",
+    key: 'Front End',
+    text: 'Front End',
+    value: 'F_END'
   },
   {
-    key: "Back End",
-    text: "Back End",
-    value: "B_END",
-  },
+    key: 'Back End',
+    text: 'Back End',
+    value: 'B_END'
+  }
 ];
 
 const NewTicketForm = (props) => {
   const dispatch = useDispatch();
-  const errors = useSelector((st) => st.errors.errors);
+  const errors = useSelector(st => st.errors);
   const currentDate = new Date();
 
   const [loading, setLoading] = useState(null);
@@ -103,19 +103,24 @@ const NewTicketForm = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log("form is", form);
-    props.edit
-      ? props.submitUpdate(props.ticketID, { ...form })
-      : dispatch(postTicket({ ...form }));
+    console.log('form is', form)
+    props.edit ? dispatch(updateTicket(props.ticketID, { ...form })) : dispatch(postTicket({ ...form }))
     setLoading(false);
     if (!errors.length) {
       setSuccess(true);
     }
-  };
+  }
 
   return (
-    <Container textAlign="justified">
-      {errors.length > 0 && <ErrorMessages errors={errors} />}
+    <Container
+      textAlign="justified"
+      style={{
+        marginTop: "1rem",
+        boxShadow: "2px 2px 7px 0 rgb(0 0 0 / 12%)",
+        padding: "1rem"
+      }}
+    >
+      {errors && <ErrorMessages errors={errors.errors} />}
       {success && <Message success header="Ticket successfully created" />}
       <Header as="h2" style={{ marginTop : '2rem'}}>
         {props.edit ? "Edit" : "New"} Ticket
@@ -132,9 +137,7 @@ const NewTicketForm = (props) => {
           placeholder="Select department"
           value={form.assignedGroup}
           options={departmentOptions}
-          onChange={(e, data) =>
-            setForm((form) => ({ ...form, assignedGroup: data.value }))
-          }
+          onChange={(e, data) => setForm(form => ({ ...form, assignedGroup: data.value }))}
         />
         <Form.Group widths="equal">
           <Form.Input
@@ -186,9 +189,7 @@ const NewTicketForm = (props) => {
             label="Importance Level"
             options={importanceLevelOptions}
             name="importanceLevel"
-            onChange={(e, data) =>
-              setForm((form) => ({ ...form, importanceLevel: data.value }))
-            }
+            onChange={(e, data) => setForm(form => ({ ...form, importanceLevel: data.value }))}
             value={form.importanceLevel}
           />
           <Form.Select
@@ -197,21 +198,14 @@ const NewTicketForm = (props) => {
             selection
             options={statusOptions}
             name="status"
-            onChange={(e, data) =>
-              setForm((form) => ({ ...form, isResolved: data.value }))
-            }
+            onChange={(e, data) => setForm(form => ({ ...form, isResolved: data.value }))}
             value={form.isResolved}
           />
         </Form.Group>
-        {!props.edit ? (
-          <Form.Button secondary type="submit">
-            Submit
-          </Form.Button>
-        ) : (
-          <Form.Button type="submit" secondary hidden>
-            Submit
-          </Form.Button>
-        )}
+        {!props.edit ?
+          <Form.Button type="submit" secondary>Submit</Form.Button> :
+          <Form.Button secondary fluid style={{ marginTop: '1rem' }}>Edit</Form.Button>
+        }
       </Form>
     </Container>
   );
