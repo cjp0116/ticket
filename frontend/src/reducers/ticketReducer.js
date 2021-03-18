@@ -27,12 +27,6 @@ function ticketReducer(state = initialState, action) {
       return state;
     };
     
-    case 'UPDATE_NOTE': {
-      let foundTicket = state.find(ele => ele.id === action.ticketID);
-      let foundNote = foundTicket.notes.find(ele => ele.id === action.noteID);
-      foundNote = action.ticket.notes[0];
-      return state;
-    };
 
     case 'DELETE_NOTE': {
       return state;

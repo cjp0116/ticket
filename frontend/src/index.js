@@ -11,8 +11,7 @@ import rootReducer from "./reducers/rootReducer";
 import { BrowserRouter } from "react-router-dom";
 import { composeWithDevTools } from 'redux-devtools-extension';
 
-import "semantic-ui-css/semantic.min.css";
-
+import 'semantic-ui-css/semantic.min.css';
 const store = createStore(
   rootReducer,
   composeWithDevTools(

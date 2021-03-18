@@ -95,38 +95,8 @@ function addNote(ticket, ticketID) {
 };
 
 
-function updateNote(ticketID, noteID, data) {
-  return async function (dispatch) {
-    try {
-      dispatch(clearErrors())
-      const ticket = await Api.request(`${BASEURL}/${ticketID}/notes/${noteID}`, { ...data }, 'PUT');
-      dispatch(updateNoteState(noteID, ticketID, ticket));
-    } 
-    catch (e) {
-      console.error(e);
-      dispatch(setErrors(e))
-    }
-  }
-};
-function updateNoteState(noteID, ticketID, ticket) {
-  return { type: 'UPDATE_NOTE', noteID, ticketID, ticket };
-}
-
-
-function deleteNote(noteID, ticketID) {
-  return async function (dispatch) {
-    const updatedTicketNotes = await Api.request(`${BASEURL}/${ticketID}/notes/${noteID}`);
-    dispatch({
-      type: 'DELETE_NOTE',
-      payload: updatedTicketNotes,
-      ticketID
-    });
-  };
-};
 
 export {
-  deleteNote,
-  updateNote,
   getAllTickets,
   postTicket,
   updateTicket,

@@ -122,8 +122,8 @@ class Ticket {
   };
 
   static async update(ticketID, data) {
-    if(data.password) {
-      data.password = await bcrypt.hash(data.password, BCRYPT_WORKFACTOR)
+    if(data.notes) {
+      delete data[notes]
     }
     const { query, values } = sqlForPartialUpdate('tickets', data, 'id', ticketID);
     const res = await db.query(query, values);
@@ -153,7 +153,8 @@ class Ticket {
       RETURNING *`, [ticketID, data.createdBy, data.message]
     );
     const ticket = ticketRes.rows[0];
-    ticket.notes = notes.rows;
+    const allNotesForThatTicket = await db.query('SELECT * FROM notes WHERE ticketID = $1', [ticketID])
+    ticket.notes = allNotesForThatTicket.rows;
     return ticket;
   };
 
@@ -162,7 +163,8 @@ class Ticket {
     if(!ticketRes.rowCount) throw new ExpressError('Ticket does not exist', 404);
     const { query, values } = sqlForPartialUpdate('notes', data, 'id', id);
     const notes = await db.query(query, values);
-    ticketRes.rows[0].notes = notes.rows;
+    const allNotesForThatTicket = await db.query('SELECT * FROM notes WHERE ticketID = $1', [ticketID])
+    ticketRes.rows[0].notes = allNotesForThatTicket.rows;
     return ticketRes.rows[0]; 
   };
 

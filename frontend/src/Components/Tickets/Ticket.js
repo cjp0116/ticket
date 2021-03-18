@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import Spinner from "../UI/Spinner";
 import {
   Container,
   Header,
@@ -11,6 +10,8 @@ import {
   Comment,
   Form,
   Button,
+  Dimmer,
+  Loader
 } from "semantic-ui-react";
 import Api from "../../backendAPI";
 import { useDispatch } from "react-redux";
@@ -26,6 +27,10 @@ const Ticket = (props) => {
   const [loading, setLoading] = useState(false);
   const [note, setNote] = useState("");
   const { currentUser } = useContext(AuthContext);
+
+  const [showEditNote, setShowEditNote] = useState(null);
+  const [editNote, setEditNote] = useState("");
+
 
   useEffect(() => {
     const fetchTicket = async () => {
@@ -51,20 +56,47 @@ const Ticket = (props) => {
     history.goBack();
   };
 
+  // SUBMITTING NOTES
   const handleNewNoteSubmission = async (e) => {
+    e.preventDefault();
     setLoading(true);
     const res = await Api.request(
       `http://localhost:5000/tickets/${ticketID}/notes`,
       { message: note, createdBy: currentUser.username },
       "POST"
     );
-    const updatedTicket = res.data.ticket;
-    setTicket({ ...updatedTicket });
+    console.log('Adding note', res.data);
+    setTicket({ ...res.data.ticket})
+    setNote("");
     setLoading(false);
   };
-  console.log("ticket", ticket);
 
-  if (loading) return <Spinner />;
+  // EDITING NOTES
+  const handleNoteUpdateSubmission = async (e, ticketID, noteID, data) => {
+    e.preventDefault();
+    setLoading(true);
+    const res = await Api.request(`http://localhost:5000/tickets/${ticketID}/notes/${noteID}`, { message : data }, 'PUT');
+    setTicket({ ...res.data.ticket });
+    setEditNote("")
+    setShowEditNote(null);
+    setLoading(false);
+  };
+  
+  // DELETING NOTES
+  const handleNoteDeletion = async (noteID) => {
+    setLoading(true);
+    const res = await Api.request(`http://localhost:5000/tickets/${ticketID}/notes/${noteID}`, {}, 'DELETE');
+    console.log('Deleting note', res.data);
+    setTicket(ticket => {
+      return {
+        ...ticket,
+        notes : [...ticket.notes].filter(note => note.id !== noteID)
+      }
+    })
+    setLoading(false);
+  };
+
+  if (loading) return <Dimmer><Loader /></Dimmer>;
 
   return (
     <Container
@@ -145,19 +177,48 @@ const Ticket = (props) => {
           Notes
         </Divider>
         <Grid.Row>
-          <Grid.Column>
+          <Comment.Group style={{ marginLeft: "1rem" }}>
             {notes.map((note) => (
-              <Comment key={note.id}>
-                <Comment.Content>
-                  <Comment.Author>{note.createdby}</Comment.Author>
-                  <Comment.Metadata>
-                    <div>{note.createdat}</div>
-                  </Comment.Metadata>
-                  <Comment.Text>{note.message}</Comment.Text>
-                </Comment.Content>
-              </Comment>
+              <div key={note.id}>
+                <Comment >
+                  <Comment.Avatar src="https://palmbayprep.org/wp-content/uploads/2015/09/user-icon-placeholder.png" />
+                  <Comment.Content>
+                    <Comment.Author>{note.createdby}</Comment.Author>
+                    <Comment.Metadata>
+                      <span>
+                        {new Date(
+                          note.createdat.substr(0, 10)
+                        ).toLocaleString()}
+                      </span>
+                    </Comment.Metadata>
+                    <Comment.Text>{note.message}</Comment.Text>
+                    {currentUser.username === note.createdby && (
+                      <>
+                        <Comment.Actions>
+                          <Comment.Action onClick={() => setShowEditNote(note.id)}> Edit</Comment.Action>
+                          <Comment.Action onClick={() => handleNoteDeletion(note.id)}>Delete</Comment.Action>
+                        </Comment.Actions>
+                        {showEditNote === note.id && (
+                          <Form reply onSubmit={(e) => handleNoteUpdateSubmission(e, ticket.id, note.id, editNote)}>
+                            <Form.TextArea  
+                              value={editNote}
+                              onChange={(e) => setEditNote(e.target.value)}
+                            />
+                            <Button content="Edit notes" labelPosition="left" icon="edit" color="green" />
+                          </Form>
+                        )}
+                      </>
+                    )}
+                  </Comment.Content>
+                </Comment>
+                <Divider horizontal />
+              </div>
             ))}
-            <Form reply>
+          </Comment.Group>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column>
+            <Form reply onSubmit={handleNewNoteSubmission}>
               <Form.TextArea
                 onChange={(e) => setNote(e.target.value)}
                 value={note}
@@ -170,7 +231,6 @@ const Ticket = (props) => {
                 icon="edit"
                 primary
                 floated="left"
-                onClick={handleNewNoteSubmission}
               />
             </Form>
           </Grid.Column>
