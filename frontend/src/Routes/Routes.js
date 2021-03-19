@@ -6,7 +6,7 @@ import Ticket  from "../Components/Tickets/Ticket"
 import NewTicketForm from "../Components/Tickets/NewTicketForm";
 import SearchTicketPage from "../Components/Tickets/SearchTicket";
 import NewUserForm from "../Components/Users/NewUserForm";
-
+import UserList from "../Components/Users/UserList";
 const Routes = props => {
   return (
     <Switch>
@@ -39,6 +39,10 @@ const Routes = props => {
         <NewUserForm />
       </Route>
       
+      <Route exact path="/users">
+        <UserList />
+      </Route>
+
       <Route exact path="/tickets/:ticketID/edit">
         <NewTicketForm edit />
       </Route>

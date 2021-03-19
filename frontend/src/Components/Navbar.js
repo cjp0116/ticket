@@ -94,7 +94,15 @@ const Navbar = (props) => {
             onClick={() => handleItemClick("Search Tickets")}
           />
         </Link>
-        
+        {
+          currentUser.isadmin && <Link to="/users">
+            <Menu.Item 
+              name="Users"
+              active={activeItem === 'Users'}
+              onClick={() => handleItemClick('Users')}
+            />
+          </Link>
+        }
         <Menu.Menu position="right">
           <Menu.Item
             name="logout"

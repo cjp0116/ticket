@@ -16,7 +16,7 @@ function getUsers() {
   return async function(dispatch) {
     try {
       const users = await Api.request('http://localhost:5000/users');
-      dispatch( { type : 'LOAD_USERS',  users } )
+      dispatch( { type : 'LOAD_USERS',  users : users.data.users } )
     } catch(e) {
       dispatch(setErrors(e))
     }

@@ -39,6 +39,7 @@ const NewUserForm = (props) => {
   const errors = useSelector(st => st.errors.errors);
 
   const handleSubmit = (e) => {
+    setSuccess(false)
     e.preventDefault();
     setLoading(true);
     console.log(form);
@@ -53,13 +54,13 @@ const NewUserForm = (props) => {
       setSuccess(true);
     }
   };
-
+  
   return (
     <Container textAlign="justified" style={{ marginTop: "1rem", boxShadow: "2px 2px 7px 0 rgb(0 0 0 / 12%)", padding: "1rem" }}>
       {
         errors.length > 0 && <ErrorMessages errors={errors} />
       }
-      {success && <Message success header="Ticket successfully created" />}
+      {success && <Message success header="User successfully created" />}
       <Header as="h2" style={{ marginTop : '2rem'}}>User Registration</Header>
       <Form onSubmit={handleSubmit} loading={loading}>
         <Form.Group widths="equal">

@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
 const { authRequired, ensureCorrectUser, ensureAdmin } = require("../middleware/auth");
 const Ticket = require('../models/tickets');
 const { ticketPostRules, validate } = require("../validators");

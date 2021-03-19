@@ -8,7 +8,7 @@ function users(state = initialState, action) {
     };
     
     case 'LOAD_USERS': {
-      return [...state, ...action.users.users ]
+      return [...action.users ]
     };
     
     case 'GET_USER': {
