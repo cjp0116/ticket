@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Form, Header, Checkbox, Message } from "semantic-ui-react";
 import { useDispatch, useSelector } from "react-redux";
 import { createUser } from "../../actions/usersActions";
 import ErrorMessages from "../UI/ErrorMessages";
+import { useParams } from "react-router-dom";
+import { updateUser } from "../../actions/usersActions";
 
 const departmentOptions = [
   {
@@ -22,24 +24,29 @@ const departmentOptions = [
   },
 ];
 const NewUserForm = (props) => {
-  const [form, setForm] = useState({
-    username: "",
-    email: "",
-    password: "",
-    firstName: "",
-    lastName: "",
-    deptCode: "",
-    isAdmin: false,
-  });
+  console.log(useParams)
+  const { username } = useParams();
+
+  const users = useSelector((store) => store.users);
+  const user = users.find((u) => u.username === username);
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const dispatch = useDispatch();
 
-  const errors = useSelector(st => st.errors.errors);
+  const errors = useSelector((st) => st.errors.errors);
+  const [form, setForm] = useState({
+    username: user.username || "",
+    email: user.email || "",
+    password: "",
+    firstName: user.firstname || "",
+    lastName: user.lastname || "",
+    deptCode: user.deptcode || "",
+    isAdmin: user.isadmin || false,
+  });
 
   const handleSubmit = (e) => {
-    setSuccess(false)
+    setSuccess(false);
     e.preventDefault();
     setLoading(true);
     console.log(form);
@@ -54,15 +61,30 @@ const NewUserForm = (props) => {
       setSuccess(true);
     }
   };
-  
+
+  const handleUserUpdate = (e, form) => {
+    e.preventDefault();
+    setLoading(true);
+    dispatch(updateUser(username, form));
+    setLoading(false);
+  };
+
+  console.log('useParams', username)
   return (
-    <Container textAlign="justified" style={{ marginTop: "1rem", boxShadow: "2px 2px 7px 0 rgb(0 0 0 / 12%)", padding: "1rem" }}>
-      {
-        errors.length > 0 && <ErrorMessages errors={errors} />
-      }
+    <Container
+      textAlign="justified"
+      style={{
+        marginTop: "1rem",
+        boxShadow: "2px 2px 7px 0 rgb(0 0 0 / 12%)",
+        padding: "1rem",
+      }}
+    >
+      {errors.length > 0 && <ErrorMessages errors={errors} />}
       {success && <Message success header="User successfully created" />}
-      <Header as="h2" style={{ marginTop : '2rem'}}>User Registration</Header>
-      <Form onSubmit={handleSubmit} loading={loading}>
+      <Header as="h2" style={{ marginTop: "2rem" }}>
+        {props.edit ? "Edit User" : 'User Registration'}
+      </Header>
+      <Form onSubmit={props.edit ? handleUserUpdate : handleSubmit} loading={loading}>
         <Form.Group widths="equal">
           <Form.Input
             label="First Name"
@@ -130,7 +152,9 @@ const NewUserForm = (props) => {
             setForm((form) => ({ ...form, isAdmin: !form.isAdmin }))
           }
         />
-        <Form.Button secondary type="submit" style={{ marginTop: "1rem" }}>Submit</Form.Button>
+        <Form.Button secondary type="submit" style={{ marginTop: "1rem" }}>
+          Submit
+        </Form.Button>
       </Form>
     </Container>
   );

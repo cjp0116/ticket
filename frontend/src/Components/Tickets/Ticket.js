@@ -11,7 +11,7 @@ import {
   Form,
   Button,
   Dimmer,
-  Loader
+  Loader,
 } from "semantic-ui-react";
 import Api from "../../backendAPI";
 import { useDispatch } from "react-redux";
@@ -30,7 +30,6 @@ const Ticket = (props) => {
 
   const [showEditNote, setShowEditNote] = useState(null);
   const [editNote, setEditNote] = useState("");
-
 
   useEffect(() => {
     const fetchTicket = async () => {
@@ -65,8 +64,8 @@ const Ticket = (props) => {
       { message: note, createdBy: currentUser.username },
       "POST"
     );
-    console.log('Adding note', res.data);
-    setTicket({ ...res.data.ticket})
+    console.log("Adding note", res.data);
+    setTicket({ ...res.data.ticket });
     setNote("");
     setLoading(false);
   };
@@ -75,28 +74,41 @@ const Ticket = (props) => {
   const handleNoteUpdateSubmission = async (e, ticketID, noteID, data) => {
     e.preventDefault();
     setLoading(true);
-    const res = await Api.request(`http://localhost:5000/tickets/${ticketID}/notes/${noteID}`, { message : data }, 'PUT');
+    const res = await Api.request(
+      `http://localhost:5000/tickets/${ticketID}/notes/${noteID}`,
+      { message: data },
+      "PUT"
+    );
     setTicket({ ...res.data.ticket });
-    setEditNote("")
+    setEditNote("");
     setShowEditNote(null);
     setLoading(false);
   };
-  
+
   // DELETING NOTES
   const handleNoteDeletion = async (noteID) => {
     setLoading(true);
-    const res = await Api.request(`http://localhost:5000/tickets/${ticketID}/notes/${noteID}`, {}, 'DELETE');
-    console.log('Deleting note', res.data);
-    setTicket(ticket => {
+    const res = await Api.request(
+      `http://localhost:5000/tickets/${ticketID}/notes/${noteID}`,
+      {},
+      "DELETE"
+    );
+    console.log("Deleting note", res.data);
+    setTicket((ticket) => {
       return {
         ...ticket,
-        notes : [...ticket.notes].filter(note => note.id !== noteID)
-      }
-    })
+        notes: [...ticket.notes].filter((note) => note.id !== noteID),
+      };
+    });
     setLoading(false);
   };
 
-  if (loading) return <Dimmer><Loader /></Dimmer>;
+  if (loading)
+    return (
+      <Dimmer>
+        <Loader />
+      </Dimmer>
+    );
 
   return (
     <Container
@@ -180,7 +192,7 @@ const Ticket = (props) => {
           <Comment.Group style={{ marginLeft: "1rem" }}>
             {notes.map((note) => (
               <div key={note.id}>
-                <Comment >
+                <Comment>
                   <Comment.Avatar src="https://palmbayprep.org/wp-content/uploads/2015/09/user-icon-placeholder.png" />
                   <Comment.Content>
                     <Comment.Author>{note.createdby}</Comment.Author>
@@ -195,16 +207,39 @@ const Ticket = (props) => {
                     {currentUser.username === note.createdby && (
                       <>
                         <Comment.Actions>
-                          <Comment.Action onClick={() => setShowEditNote(note.id)}> Edit</Comment.Action>
-                          <Comment.Action onClick={() => handleNoteDeletion(note.id)}>Delete</Comment.Action>
+                          <Comment.Action
+                            onClick={() => setShowEditNote(note.id)}
+                          >
+                            Edit
+                          </Comment.Action>
+                          <Comment.Action
+                            onClick={() => handleNoteDeletion(note.id)}
+                          >
+                            Delete
+                          </Comment.Action>
                         </Comment.Actions>
                         {showEditNote === note.id && (
-                          <Form reply onSubmit={(e) => handleNoteUpdateSubmission(e, ticket.id, note.id, editNote)}>
-                            <Form.TextArea  
+                          <Form
+                            reply
+                            onSubmit={(e) =>
+                              handleNoteUpdateSubmission(
+                                e,
+                                ticket.id,
+                                note.id,
+                                editNote
+                              )
+                            }
+                          >
+                            <Form.TextArea
                               value={editNote}
                               onChange={(e) => setEditNote(e.target.value)}
                             />
-                            <Button content="Edit notes" labelPosition="left" icon="edit" color="green" />
+                            <Button
+                              content="Edit notes"
+                              labelPosition="left"
+                              icon="edit"
+                              color="green"
+                            />
                           </Form>
                         )}
                       </>
