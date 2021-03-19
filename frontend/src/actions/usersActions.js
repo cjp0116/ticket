@@ -42,6 +42,7 @@ function deleteUser(username) {
       );
       dispatch({ type: "DELETE_USER", payload: username });
     } catch (e) {
+      dispatch(setErrors(e))
       console.error(e);
     }
   };
@@ -59,6 +60,7 @@ function updateUser(username, data) {
       })
     } catch(e) {
       console.error(e);
+      dispatch(setErrors(e));
     }
   }
 }

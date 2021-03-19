@@ -18,6 +18,7 @@ function users(state = initialState, action) {
     case 'DELETE_USER': {
       return state.filter(u => u.username !== action.payload);
     };
+
     case 'UPDATE_USER': {
       return state.map(user => {
         if(user.username === action.username) {
@@ -27,6 +28,7 @@ function users(state = initialState, action) {
         }
       })
     };
+    
     default: 
       return state
   }

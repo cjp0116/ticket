@@ -37,16 +37,15 @@ function App() {
     history.push("/");
   };
 
-  if (loading)
-    return (
-      <Dimmer active>
-        <Loader />
-      </Dimmer>
-    );
   return (
     <AuthContext.Provider
       value={{ setToken, currentUser, setCurrentUser, handleLogout }}
     >
+      {loading && (
+        <Dimmer>
+          <Loader />
+        </Dimmer>
+      )}
       <div className="App">
         <Navbar />
         <Routes />

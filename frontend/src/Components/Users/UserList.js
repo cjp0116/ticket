@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsers } from "../../actions/usersActions";
-import { Card, Container, Header, Icon, Image, Button } from "semantic-ui-react";
-import { Link } from "react-router-dom";
-import { deleteUser } from "../../actions/usersActions";
+import { Card, Container, Header, Icon, Image } from "semantic-ui-react";
+import UserModal from "./UsersModal";
 
 const UserList = (props) => {
   const dispatch = useDispatch();
@@ -14,9 +13,6 @@ const UserList = (props) => {
     }
   }, []);
   
-  const handleDeleteUser = (username) => {
-    dispatch(deleteUser(username))
-  }
   
   return (
     <Container>
@@ -28,17 +24,15 @@ const UserList = (props) => {
       </div>
       <Card.Group>
         {users.map((user) => (
-          <Card>
+          <Card key={user.username}>
             <Image src="https://palmbayprep.org/wp-content/uploads/2015/09/user-icon-placeholder.png" wrapped />
             <Card.Content>
               <Card.Header>{user.username}</Card.Header>
               <Card.Meta><Icon name="mail outline"/> {user.email}</Card.Meta>
               <Card.Meta><Icon name="building outline" /> {user.deptcode}</Card.Meta>
               <Card.Content extra>
-                <Link to={`/users/${user.username}`}>
-                  <Button circular icon="settings" positive>Edit</Button>
-                </Link>
-                <Button onClick={() => handleDeleteUser(user.username)} circular icon="Delete" negative>Delete</Button>
+                <UserModal edit user={user} />
+                <UserModal delete username={user.username} />
               </Card.Content>
             </Card.Content>  
           </Card>

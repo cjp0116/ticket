@@ -39,13 +39,14 @@ const Login = (props) => {
       const { username } = decode(token);
       user = await Api.request(`http://localhost:5000/users/${username}`);
       setCurrentUser(user.data.user);
-      history.push("/tickets")
+      history.push("/tickets");
+      setLoading(false);
     } catch (e) {
       console.error(e)
       setError(true);
+      setLoading(false);
     }
     setForm({ username: "", password: "" });
-    setLoading(false);
   };
   return (
     <Grid textAlign="center" style={{ height: "100vh" }} verticalAlign="middle">

@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Container, Form, Header, Checkbox, Message } from "semantic-ui-react";
+import React, { useState } from "react";
+import { Container, Form, Header, Checkbox, Message, Loader } from "semantic-ui-react";
 import { useDispatch, useSelector } from "react-redux";
-import { createUser } from "../../actions/usersActions";
+import { createUser, updateUser } from "../../actions/usersActions";
 import ErrorMessages from "../UI/ErrorMessages";
-import { useParams } from "react-router-dom";
-import { updateUser } from "../../actions/usersActions";
 
 const departmentOptions = [
   {
@@ -24,52 +22,40 @@ const departmentOptions = [
   },
 ];
 const NewUserForm = (props) => {
-  console.log(useParams)
-  const { username } = useParams();
-
-  const users = useSelector((store) => store.users);
-  const user = users.find((u) => u.username === username);
-
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const errors = useSelector((st) => st.errors);
   const dispatch = useDispatch();
-
-  const errors = useSelector((st) => st.errors.errors);
+  
   const [form, setForm] = useState({
-    username: user.username || "",
-    email: user.email || "",
+    username: props.user.username || "",
+    email: props.user.email || "",
     password: "",
-    firstName: user.firstname || "",
-    lastName: user.lastname || "",
-    deptCode: user.deptcode || "",
-    isAdmin: user.isadmin || false,
+    firstName: props.user.firstname || "",
+    lastName: props.user.lastname || "",
+    deptCode: props.user.deptcode || "",
+    isAdmin: props.user.isadmin || false,
   });
 
   const handleSubmit = (e) => {
     setSuccess(false);
     e.preventDefault();
     setLoading(true);
-    console.log(form);
-    dispatch(createUser({ ...form }));
+    console.log("FORM IS :", form);
+    props.edit ? dispatch(updateUser(props.user.username, { ...form})) : dispatch(createUser({ ...form }));
+    if (!errors) {
+      setSuccess(true);
+    }
     setLoading(false);
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((form) => ({ ...form, [name]: value }));
-    if (!errors.length) {
-      setSuccess(true);
-    }
+ 
   };
-
-  const handleUserUpdate = (e, form) => {
-    e.preventDefault();
-    setLoading(true);
-    dispatch(updateUser(username, form));
-    setLoading(false);
-  };
-
-  console.log('useParams', username)
+  
+  if(loading) return <Loader content="Loading.." />;
   return (
     <Container
       textAlign="justified"
@@ -79,12 +65,12 @@ const NewUserForm = (props) => {
         padding: "1rem",
       }}
     >
-      {errors.length > 0 && <ErrorMessages errors={errors} />}
-      {success && <Message success header="User successfully created" />}
+      {errors && <ErrorMessages errors={errors.errors} />}
+      {success && <Message success header={ !props.edit ? "User successfully created" : 'Editted user'} />}
       <Header as="h2" style={{ marginTop: "2rem" }}>
         {props.edit ? "Edit User" : 'User Registration'}
       </Header>
-      <Form onSubmit={props.edit ? handleUserUpdate : handleSubmit} loading={loading}>
+      <Form onSubmit={handleSubmit} loading={loading}>
         <Form.Group widths="equal">
           <Form.Input
             label="First Name"
@@ -92,7 +78,7 @@ const NewUserForm = (props) => {
             onChange={handleChange}
             name="firstName"
             value={form.firstName}
-            required
+            required={!props.edit}
           />
           <Form.Input
             label="Last Name"
@@ -100,7 +86,7 @@ const NewUserForm = (props) => {
             onChange={handleChange}
             name="lastName"
             value={form.lastName}
-            required
+            required={!props.edit}
           />
         </Form.Group>
 
@@ -112,7 +98,7 @@ const NewUserForm = (props) => {
           onChange={handleChange}
           name="username"
           value={form.username}
-          required
+          required={!props.edit}
         />
         <Form.Input
           label="Email"
@@ -132,7 +118,7 @@ const NewUserForm = (props) => {
           name="password"
           onChange={handleChange}
           value={form.password}
-          required
+          required={!props.edit}
         />
 
         <Form.Select

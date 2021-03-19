@@ -95,14 +95,17 @@ const Navbar = (props) => {
           />
         </Link>
         {
-          currentUser.isadmin && <Link to="/users">
-            <Menu.Item 
+          currentUser.isadmin && (
+          <Link to="/users">
+            <Menu.Item
+              icon="users"
+              iconposition="left" 
               name="Users"
               active={activeItem === 'Users'}
               onClick={() => handleItemClick('Users')}
             />
           </Link>
-        }
+          )}
         <Menu.Menu position="right">
           <Menu.Item
             name="logout"
