@@ -36,21 +36,13 @@ const Routes = props => {
       </Route>
 
       <Route exact path="/newUser">
-        <NewUserForm />
+        <NewUserForm user={{}} />
       </Route>
       
       <Route exact path="/users">
         <UserList />
       </Route>
       
-      <Route exact path="/users/:username">
-        <NewUserForm edit />
-      </Route>
-
-      <Route exact path="/tickets/:ticketID/edit">
-        <NewTicketForm edit />
-      </Route>
-
       <Route exact path="/tickets/:ticketID">
         <Ticket />
       </Route>
