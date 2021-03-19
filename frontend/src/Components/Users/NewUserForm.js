@@ -21,6 +21,15 @@ const departmentOptions = [
     value: "B_END",
   },
 ];
+const INITIAL_STATE = {
+  username : "",
+  email : "",
+  password : "",
+  firstName : "",
+  lastName : "",
+  deptCode : "",
+  isAdmin : false
+};
 const NewUserForm = (props) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -45,6 +54,7 @@ const NewUserForm = (props) => {
     props.edit ? dispatch(updateUser(props.user.username, { ...form})) : dispatch(createUser({ ...form }));
     if (!errors) {
       setSuccess(true);
+      setForm(INITIAL_STATE);
     }
     setLoading(false);
   };

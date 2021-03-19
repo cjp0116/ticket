@@ -1,105 +1,102 @@
 import Api from "../backendAPI";
 import { setErrors, clearErrors } from "./errorActions";
 
-const BASEURL = `http://localhost:5000/tickets`
+const BASEURL = `http://localhost:5000/tickets`;
 
 function setLoading() {
-  return { type : 'LOADING' }
+  return { type: "LOADING" };
 }
-
-
 
 function getAllTickets() {
   return async function (dispatch) {
     try {
-      dispatch(clearErrors())
-      dispatch(setLoading())
+      dispatch(clearErrors());
+      dispatch(setLoading());
       let ticketsResults = await Api.request(BASEURL);
-      const tickets = ticketsResults.data.tickets.map(t => t);
-      dispatch(loadTickets(tickets))
+      const tickets = ticketsResults.data.tickets.map((t) => t);
+      dispatch(loadTickets(tickets));
     } catch (e) {
-      dispatch(setErrors(e))
+      dispatch(setErrors(e));
     }
   };
-};
+}
 function loadTickets(tickets) {
-  return { type: 'LOAD_TICKETS', tickets };
-};
-
-
+  return { type: "LOAD_TICKETS", tickets };
+}
 
 function postTicket(formData) {
   return async function (dispatch) {
     try {
-      dispatch(clearErrors())
-      const ticketResults = await Api.request(`${BASEURL}`, { ...formData }, 'POST');
+      dispatch(clearErrors());
+      const ticketResults = await Api.request(
+        `${BASEURL}`,
+        { ...formData },
+        "POST"
+      );
       const ticket = ticketResults.data;
       dispatch(addTicket(ticket));
     } catch (e) {
-      dispatch(setErrors(e))
+      dispatch(setErrors(e));
     }
   };
-};
+}
 function addTicket(ticket) {
-  return { type: 'POST_TICKET', ticket: ticket.ticket }
-};
-
+  return { type: "POST_TICKET", ticket: ticket.ticket };
+}
 
 function updateTicket(ticketID, formData) {
   return async function (dispatch) {
     try {
-      dispatch(clearErrors())
-      const ticket = await Api.request(`${BASEURL}/${ticketID}`, { ...formData}, 'PUT');
+      dispatch(clearErrors());
+      const ticket = await Api.request(
+        `${BASEURL}/${ticketID}`,
+        { ...formData },
+        "PUT"
+      );
       dispatch(updateState(ticket, ticketID));
     } catch (e) {
       dispatch(setErrors(e));
     }
   };
-};
+}
 function updateState(ticket, ticketID) {
-  return { type: 'UPDATE_TICKET', ticket, ticketID };
-};
-
+  return { type: "UPDATE_TICKET", ticket, ticketID };
+}
 
 function deleteTicket(ticketID) {
   return async function (dispatch) {
     try {
-      dispatch(clearErrors())
+      dispatch(clearErrors());
       const message = await Api.request(`${BASEURL}/${ticketID}`, {}, "DELETE");
       dispatch(removeFromState(ticketID));
     } catch (e) {
-      console.error(e)
-      dispatch(setErrors(e))
+      console.error(e);
+      dispatch(setErrors(e));
     }
   };
-};
+}
 function removeFromState(ticketID) {
-  return { type: 'REMOVE_TICKET', ticketID };
-};
-
+  return { type: "REMOVE_TICKET", ticketID };
+}
 
 function createNote(ticketID, data) {
   return async function (dispatch) {
     try {
-      dispatch(clearErrors())
-      const ticket = await Api.request(`${BASEURL}/${ticketID}/notes`, { ...data }, 'POST');
+      dispatch(clearErrors());
+      const ticket = await Api.request(
+        `${BASEURL}/${ticketID}/notes`,
+        { ...data },
+        "POST"
+      );
       dispatch(addNote(ticket, ticketID));
     } catch (e) {
       console.error(e);
-      dispatch(setErrors(e))
+      dispatch(setErrors(e));
     }
   };
-};
+}
 function addNote(ticket, ticketID) {
-  return { type: 'CREATE_NOTE', ticket, ticketID };
-};
+  return { type: "CREATE_NOTE", ticket, ticketID };
+}
 
-
-
-export {
-  getAllTickets,
-  postTicket,
-  updateTicket,
-  deleteTicket,
-  createNote,
-};
+export { getAllTickets, postTicket, updateTicket, deleteTicket, createNote };

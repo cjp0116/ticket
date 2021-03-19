@@ -71,11 +71,23 @@ const departmentOptions = [
     value: "B_END",
   },
 ];
+const currentDate = new Date();
+const INITIAL_STATE = {
+  createdBy: "",
+  assignedTo: "",
+  createdAt: currentDate,
+  importanceLevel: importanceLevelOptions[0].value,
+  closedAt: "",
+  isResolved: statusOptions[0].value,
+  assignedGroup: departmentOptions[0].value,
+  subject: "",
+  requestDetail: "",
+  notes: "",
+};
 
 const NewTicketForm = (props) => {
   const dispatch = useDispatch();
   const errors = useSelector((st) => st.errors);
-  const currentDate = new Date();
 
   const [loading, setLoading] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -103,12 +115,14 @@ const NewTicketForm = (props) => {
     e.preventDefault();
     setLoading(true);
     console.log("form is", form);
+    console.log('ticketID is', props.ticketID);
     props.edit
       ? dispatch(updateTicket(props.ticketID, { ...form }))
       : dispatch(postTicket({ ...form }));
     setLoading(false);
     if (!errors) {
       setSuccess(true);
+      setForm(INITIAL_STATE);
     }
   };
 
@@ -122,7 +136,16 @@ const NewTicketForm = (props) => {
       }}
     >
       {errors && <ErrorMessages errors={errors.errors} />}
-      {success && <Message success header="Ticket successfully created" />}
+      {success && (
+        <Message
+          success
+          header={
+            !props.edit
+              ? "Ticket successfully created"
+              : "Ticket successfully updated"
+          }
+        />
+      )}
       <Header as="h2" style={{ marginTop: "2rem" }}>
         {props.edit ? "Edit" : "New"} Ticket
       </Header>
