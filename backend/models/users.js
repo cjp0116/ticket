@@ -51,7 +51,6 @@ class User {
       throw new ExpressError(`Username ${username} does not exist`, 404);
     };
     const user = res.rows[0];
-    delete user.id;
     delete user.password; 
     return user;
   };

@@ -4,7 +4,6 @@ import { Form, Header, Container, Message } from "semantic-ui-react";
 
 import { postTicket, updateTicket } from "../../actions/ticketActions";
 import ErrorMessages from "../UI/ErrorMessages";
-import { useParams } from "react-router-dom";
 
 const importanceLevelOptions = [
   {
@@ -152,6 +151,7 @@ const NewTicketForm = (props) => {
             value={form.createdBy}
             name="createdBy"
             onChange={handleChange}
+            required={props.edit}
           />
           <Form.Input
             icon="user"
