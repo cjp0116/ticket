@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUsers } from "../../actions/usersActions";
 import { Card, Container, Header, Icon, Image } from "semantic-ui-react";
 import UserModal from "./UsersModal";
+import UserSearch from "./UserSearch";
 
 const UserList = (props) => {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ const UserList = (props) => {
           <Icon name="users" circular />
           <Header.Content>Users</Header.Content>
         </Header>
+        <UserSearch source={users}/>
       </div>
       <Card.Group>
         {users.map((user) => (

@@ -6,6 +6,18 @@ import { Table, Container, Dimmer, Loader } from 'semantic-ui-react';
 import AuthContext from "../../context/AuthContext";
 import TicketData from "./TicketData";
 
+// assignedgroup: "F_STACK"
+// assignedto: "admin"
+// closedat: null
+// createdat: "2021-03-19T21:50:39.681Z"
+// createdby: "admin"
+// id: 32
+// importancelevel: 3
+// isresolved: false
+// notes: [{…}]
+// requestdetail: "tesgasdkljhasdkl"
+// subject: "testtting"
+
 const TicketList = props => {
   const { currentUser } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
@@ -16,7 +28,6 @@ const TicketList = props => {
   const myOpenTickets = tickets.filter(t => t.assignedto === currentUser.username && !t.isresolved) || [];
   const myGroupTickets = tickets.filter(t => t.assignedgroup === currentUser.deptcode && !t.isresolved) || [];
   const myRecentTickets = tickets.filter(t => t.assignedto === currentUser.username).sort((a,b) => b.createdat - a.createdat) || [];
-
   useEffect(() => {
     setLoading(true)
     if (!tickets.length) {
@@ -35,7 +46,7 @@ const TicketList = props => {
 
   return (
     <Container fluid>
-      <Table celled selectable>
+      <Table celled selectable sortable>
         <Table.Header>
           <Table.Row textAlign="center">
             <Table.HeaderCell>Ticket #</Table.HeaderCell>

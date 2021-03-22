@@ -21,7 +21,6 @@ function ticketReducer(state = initialState, action) {
       return state.filter(ele => ele.id !== action.ticketID);
     };
     
-
     default: {
       return state;
     };
