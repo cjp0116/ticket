@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsers } from "../../actions/usersActions";
 import { Card, Container, Header, Icon, Image } from "semantic-ui-react";
-import UserModal from "./UsersModal";
 import UserSearch from "./UserSearch";
+import UserCard from "./UserCard";
 
 const UserList = (props) => {
   const dispatch = useDispatch();
@@ -26,18 +26,7 @@ const UserList = (props) => {
       </div>
       <Card.Group>
         {users.map((user) => (
-          <Card key={user.username}>
-            <Image src="https://palmbayprep.org/wp-content/uploads/2015/09/user-icon-placeholder.png" wrapped />
-            <Card.Content>
-              <Card.Header>{user.username}</Card.Header>
-              <Card.Meta><Icon name="mail outline"/> {user.email}</Card.Meta>
-              <Card.Meta><Icon name="building outline" /> {user.deptcode}</Card.Meta>
-              <Card.Content extra>
-                <UserModal edit user={user} />
-                <UserModal delete username={user.username} />
-              </Card.Content>
-            </Card.Content>  
-          </Card>
+          <UserCard user={user} />
         ))}
       </Card.Group>
     </Container>
