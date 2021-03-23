@@ -122,9 +122,6 @@ class Ticket {
   };
 
   static async update(ticketID, data) {
-    if(data.notes) {
-      delete data[notes]
-    }
     const { query, values } = sqlForPartialUpdate('tickets', data, 'id', ticketID);
     const res = await db.query(query, values);
     if(!res.rowCount) {

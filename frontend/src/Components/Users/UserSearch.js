@@ -70,7 +70,7 @@ const UserSearch = (props) => {
 
   return (
     <Grid>  
-      <Grid.Column width={6}>
+      <Grid.Column width={16}>
         <Search 
           loading={loading}
           onResultSelect={(e, data) => {
@@ -82,7 +82,7 @@ const UserSearch = (props) => {
           value={value}
         />
       </Grid.Column>
-      <Grid.Column width={10}>
+      <Grid.Column width="4">
           {results.map(user => {
             return (
               <UserCard user={user} />

@@ -8,6 +8,7 @@ const UserCard = ({ user }) => {
       <Image
         src="https://palmbayprep.org/wp-content/uploads/2015/09/user-icon-placeholder.png"
         wrapped
+        ui={false}
       />
       <Card.Content>
         <Card.Header>{user.username}</Card.Header>

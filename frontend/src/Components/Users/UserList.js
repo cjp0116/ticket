@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsers } from "../../actions/usersActions";
-import { Card, Container, Header, Icon, Image } from "semantic-ui-react";
+import { Card, Container, Header, Icon } from "semantic-ui-react";
 import UserSearch from "./UserSearch";
 import UserCard from "./UserCard";
 

@@ -56,7 +56,11 @@ router.post("/", ticketPostRules(), validate ,async (req, res, next) => {
 // => { ticket : { id, createdBy, assignedTo, createdAt, importanceLevel, closedAt ,isResolved, subject, requestDetail } }
 // 404 if ticket does not exist
 router.put("/:id", async (req, res, next) => {
+  if(req.body.notes) {
+    delete req.body[notes];
+  }
   try {
+    console.log('the params.id is', req.params.id)
     const ticket = await Ticket.update(req.params.id, req.body);
     return res.status(200).json({ ticket })
   } catch(e) {

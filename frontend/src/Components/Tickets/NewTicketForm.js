@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Form, Header, Container, Message } from "semantic-ui-react";
-
+import Api from "../../backendAPI";
 import { postTicket, updateTicket } from "../../actions/ticketActions";
 import ErrorMessages from "../UI/ErrorMessages";
 
@@ -115,7 +115,7 @@ const NewTicketForm = (props) => {
     e.preventDefault();
     setLoading(true);
     console.log("form is", form);
-    console.log('ticketID is', props.ticketID);
+    console.log('ticketID is', props.ticketID)
     props.edit
       ? dispatch(updateTicket(props.ticketID, { ...form }))
       : dispatch(postTicket({ ...form }));
@@ -126,6 +126,12 @@ const NewTicketForm = (props) => {
     }
   };
 
+  const handleEdit = async e => {
+    e.preventDefault();
+    const res = await Api.request('http://localhost:5000/tickets/' + props.ticketID, { ...form}, 'put');
+    console.log(res.data.ticket);
+    
+  }
   return (
     <Container
       textAlign="justified"
@@ -149,7 +155,7 @@ const NewTicketForm = (props) => {
       <Header as="h2" style={{ marginTop: "2rem" }}>
         {props.edit ? "Edit" : "New"} Ticket
       </Header>
-      <Form onSubmit={handleSubmit} loading={loading}>
+      <Form onSubmit={handleEdit} loading={loading}>
         <Form.Input
           label="Created At"
           placeholder={currentDate}
@@ -174,7 +180,7 @@ const NewTicketForm = (props) => {
             value={form.createdBy}
             name="createdBy"
             onChange={handleChange}
-            required={props.edit}
+            required={!props.edit}
           />
           <Form.Input
             icon="user"
@@ -184,6 +190,7 @@ const NewTicketForm = (props) => {
             value={form.assignedTo}
             name="assignedTo"
             onChange={handleChange}
+            required={!props.edit}
           />
         </Form.Group>
         <Form.Input
@@ -192,6 +199,8 @@ const NewTicketForm = (props) => {
           onChange={handleChange}
           name="subject"
           value={form.subject}
+          required={!props.edit}
+
         />
         <Form.TextArea
           label="Request Details"
@@ -200,6 +209,8 @@ const NewTicketForm = (props) => {
           name="requestDetail"
           value={form.requestDetail}
           onChange={handleChange}
+          required={!props.edit}
+
         />
         {!props.edit && (
           <Form.TextArea
