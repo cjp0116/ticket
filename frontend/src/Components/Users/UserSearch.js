@@ -1,6 +1,7 @@
 import _ from 'lodash';
-import { Search, Grid, Header, Segment, Label } from 'semantic-ui-react';
+import { Search, Grid, Label } from 'semantic-ui-react';
 import React, { useReducer } from 'react';
+import UserCard from "./UserCard";
 
 const INITIAL_STATE = {
   loading : false,
@@ -82,11 +83,9 @@ const UserSearch = (props) => {
         />
       </Grid.Column>
       <Grid.Column width={10}>
-          {results.map(res => {
+          {results.map(user => {
             return (
-              <div key={res.username}>
-                {JSON.stringify(res)}
-              </div>
+              <UserCard user={user} />
             )
           })}
       </Grid.Column>
