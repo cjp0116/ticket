@@ -23,10 +23,10 @@ const UserList = (props) => {
           <Header.Content>Users</Header.Content>
         </Header>
         <UserSearch source={users}/>
-      </div>
+      </div>  
       <Card.Group>
         {users.map((user) => (
-          <UserCard user={user} />
+          <UserCard user={user} key={user.username} />
         ))}
       </Card.Group>
     </Container>

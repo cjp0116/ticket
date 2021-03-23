@@ -4,7 +4,7 @@ import UserModal from "./UsersModal";
 
 const UserCard = ({ user }) => {
   return (
-    <Card key={user.username}>
+    <Card key={user.usernmae}>
       <Image
         src="https://palmbayprep.org/wp-content/uploads/2015/09/user-icon-placeholder.png"
         wrapped
