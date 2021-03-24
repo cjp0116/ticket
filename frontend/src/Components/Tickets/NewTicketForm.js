@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Form, Header, Container, Message } from "semantic-ui-react";
-import Api from "../../backendAPI";
 import { postTicket, updateTicket } from "../../actions/ticketActions";
 import ErrorMessages from "../UI/ErrorMessages";
+
 
 const importanceLevelOptions = [
   {
@@ -84,7 +84,6 @@ const INITIAL_STATE = {
   requestDetail: "",
   notes: "",
 };
-
 const NewTicketForm = (props) => {
   const dispatch = useDispatch();
   const errors = useSelector((st) => st.errors);
@@ -125,13 +124,6 @@ const NewTicketForm = (props) => {
       setForm(INITIAL_STATE);
     }
   };
-
-  const handleEdit = async e => {
-    e.preventDefault();
-    const res = await Api.request('http://localhost:5000/tickets/' + props.ticketID, { ...form}, 'put');
-    console.log(res.data.ticket);
-    
-  }
   return (
     <Container
       textAlign="justified"
@@ -155,7 +147,7 @@ const NewTicketForm = (props) => {
       <Header as="h2" style={{ marginTop: "2rem" }}>
         {props.edit ? "Edit" : "New"} Ticket
       </Header>
-      <Form onSubmit={handleEdit} loading={loading}>
+      <Form onSubmit={handleSubmit} loading={loading}>
         <Form.Input
           label="Created At"
           placeholder={currentDate}

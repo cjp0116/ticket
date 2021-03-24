@@ -8,6 +8,7 @@
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.7.0",
     "axios": "^0.21.1",
+    "csv-writer": "^1.6.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "react": "^17.0.1",
