@@ -58,11 +58,9 @@ router.post("/", ticketPostRules(), validate ,async (req, res, next) => {
 router.put("/:id", async (req, res, next) => {
   if('createdAt' in req.body) delete req.body['createdAt']; // doesn't make sense to update when the ticket was created.
   if('notes' in req.body) delete req.body['notes'];
-  
+  if('closedAt' in req.body) delete req.body['closedAt'];
   try {
-    console.log('the params.id is', req.params.id)
-    console.log('incoming form is:', req.body)
-    const ticket = await Ticket.update(req.params.id, req.body);
+    let ticket = await Ticket.update(req.params.id, req.body);
     return res.status(200).json({ ticket })
   } catch(e) {
     return next(e)

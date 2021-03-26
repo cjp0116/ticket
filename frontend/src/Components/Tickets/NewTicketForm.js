@@ -80,7 +80,7 @@ const departmentOptions = [
 const INITIAL_STATE = {
   createdBy: "",
   assignedTo: "",
-  createdAt: dateTime,
+  createdAt: currentdate,
   importanceLevel: importanceLevelOptions[0].value,
   closedAt: "",
   isResolved: statusOptions[0].value,
@@ -89,6 +89,7 @@ const INITIAL_STATE = {
   requestDetail: "",
   notes: "",
 };
+
 const NewTicketForm = (props) => {
   const dispatch = useDispatch();
   const errors = useSelector((st) => st.errors);
@@ -99,7 +100,7 @@ const NewTicketForm = (props) => {
   const [form, setForm] = useState({
     createdBy: props.ticket.createdby || "",
     assignedTo: props.ticket.assignedto || "",
-    createdAt: props.ticket.createdat || dateTime,
+    createdAt: props.ticket.createdat || currentdate,
     importanceLevel:
       props.ticket.importancelevel || importanceLevelOptions[0].value,
     closedAt: props.ticket.closedat || "",
@@ -119,17 +120,18 @@ const NewTicketForm = (props) => {
     e.preventDefault();
     setLoading(true);
     if(form.isResolved) {
-      setForm(form => ({...form, }))
+      setForm(form => ({...form, closedAt : currentdate }))
     }
     props.edit
       ? dispatch(updateTicket(props.ticketID, { ...form }))
       : dispatch(postTicket({ ...form }));
     setLoading(false);
-    if (!errors) {
+    if (!errors.length) {
       setSuccess(true);
       setForm(INITIAL_STATE);
     }
   };
+  console.log(errors);
   return (
     <Container
       textAlign="justified"
@@ -158,7 +160,6 @@ const NewTicketForm = (props) => {
           label="Created At"
           placeholder={dateTime}
           readOnly
-          onChange={handleChange}
         />
         <Form.Select
           label="Assign Group"
