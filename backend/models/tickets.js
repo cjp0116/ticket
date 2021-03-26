@@ -122,12 +122,17 @@ class Ticket {
   };
 
   static async update(ticketID, data) {
-    const { query, values } = sqlForPartialUpdate('tickets', data, 'id', ticketID);
-    const res = await db.query(query, values);
-    if(!res.rowCount) {
-      throw new ExpressError('Ticket does not exist', 404)
+    try {
+      const { query, values } = sqlForPartialUpdate('tickets', data, 'id', ticketID);
+      const res = await db.query(query, values);
+      if(!res.rowCount) {
+        console.log(res)
+        throw new ExpressError('Ticket does not exist', 404)
+      }
+      return res.rows[0]
+    } catch(e) {
+      console.error(e)
     }
-    return res.rows[0]
   };
 
   static async destroy(ticketID) { 

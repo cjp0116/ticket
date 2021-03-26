@@ -4,6 +4,12 @@ import { Form, Header, Container, Message } from "semantic-ui-react";
 import { postTicket, updateTicket } from "../../actions/ticketActions";
 import ErrorMessages from "../UI/ErrorMessages";
 
+const currentdate = new Date();
+let dateTime = (currentdate.getMonth() + 1)+ "/"
+              + currentdate.getDate() + "/"
+              + currentdate.getFullYear() + ' @ '
+              + currentdate.getHours() + ":" 
+              + currentdate.getMinutes();
 
 const importanceLevelOptions = [
   {
@@ -71,11 +77,10 @@ const departmentOptions = [
     value: "B_END",
   },
 ];
-const currentDate = new Date();
 const INITIAL_STATE = {
   createdBy: "",
   assignedTo: "",
-  createdAt: currentDate,
+  createdAt: dateTime,
   importanceLevel: importanceLevelOptions[0].value,
   closedAt: "",
   isResolved: statusOptions[0].value,
@@ -94,7 +99,7 @@ const NewTicketForm = (props) => {
   const [form, setForm] = useState({
     createdBy: props.ticket.createdby || "",
     assignedTo: props.ticket.assignedto || "",
-    createdAt: props.ticket.createdat || currentDate,
+    createdAt: props.ticket.createdat || dateTime,
     importanceLevel:
       props.ticket.importancelevel || importanceLevelOptions[0].value,
     closedAt: props.ticket.closedat || "",
@@ -113,8 +118,9 @@ const NewTicketForm = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log("form is", form);
-    console.log('ticketID is', props.ticketID)
+    if(form.isResolved) {
+      setForm(form => ({...form, }))
+    }
     props.edit
       ? dispatch(updateTicket(props.ticketID, { ...form }))
       : dispatch(postTicket({ ...form }));
@@ -150,7 +156,7 @@ const NewTicketForm = (props) => {
       <Form onSubmit={handleSubmit} loading={loading}>
         <Form.Input
           label="Created At"
-          placeholder={currentDate}
+          placeholder={dateTime}
           readOnly
           onChange={handleChange}
         />

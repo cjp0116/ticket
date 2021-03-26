@@ -46,7 +46,6 @@ const Login = (props) => {
       setError(true);
       setLoading(false);
     }
-    setForm({ username: "", password: "" });
   };
   return (
     <Grid textAlign="center" style={{ height: "100vh" }} verticalAlign="middle">
