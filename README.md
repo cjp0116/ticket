@@ -7,14 +7,29 @@
 # Requirements
 - All the required packages are listed under `package.json`.
 - You need to have postgresql installed for this to work.
-- After installing postgresql, create a database naemd `ticket_system` and run the sql file `psql < data.sql` to populate the database.
+- After installing postgresql, create a database named `ticket_system` and run the sql file `psql < data.sql` to populate the database.
+
+# DB Schema
+- You can see the database schema [here](https://app.quickdatabasediagrams.com/#/d/v7Eozr)
+
 
 # How to start the app
 1. start the backend server first, under `/backend` you'll find `server.js`, start the app by `node server.js` or if you have nodemon installed, `nodemon server.js`
 2. Start the react app. Navigate to `/frontend` and type `npm start` to start the React app.
-3. If you look at the `/backend/data.sql` file you'll find that there is one user that has been inserted upon seeding the db. That user has admin rights, and the credentials are username : admin, password : admin.
+3. If you look at the `/backend/data.sql` file you'll find that there is one user that has been inserted upon seeding the db. That user has admin rights, and the credentials are username : admin, password : admin. Supply those credentials to the initial login page. 
 
-# DB Schema
-- You can see the database schema [here](https://app.quickdatabasediagrams.com/#/d/v7Eozr)
+# How to Run Tests
+* You may see three test files located under `backend/__tests__`.
+* Simply run `jest <name_of_test_file>` to run the tests.
+
+# Technologies Utilized 
+* Postgresql
+* JS
+* Node
+* Express
+* ReactJS
+* Semantic UI 
+
+
 
 
