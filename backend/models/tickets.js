@@ -83,6 +83,9 @@ class Ticket {
       return tickets.rows;
     } catch (e) {
       console.error(e);
+      console.error('msg :', e.msg);
+      console.error('statusCode : ', e.statusCode);
+      throw new ExpressError(e.msg, e.statusCode);
     }
   }
 
@@ -124,6 +127,9 @@ class Ticket {
       return ticket;
     } catch (e) {
       console.error(e);
+      console.error('msg :', e.msg);
+      console.error('statusCode : ', e.statusCode);
+      throw new ExpressError(e.msg, e.statusCode);
     }
   }
 
@@ -131,7 +137,7 @@ class Ticket {
     try {
       const res = await db.query("select * from tickets where id = $1", [id]);
       if (!res.rowCount) {
-        throw new ExpressError("ticket does not exist", 404);
+        throw new ExpressError("Ticket does not exist", 404);
       }
       const noteRes = await db.query(
         "select * from notes where ticketID = $1",
@@ -142,12 +148,15 @@ class Ticket {
       return ticket;
     } catch (e) {
       console.error(e);
+      console.error('msg :', e.msg);
+      console.error('statusCode : ', e.statusCode);
+      throw new ExpressError(e.msg, e.statusCode);
     }
   }
 
   static async update(ticketID, data) {
     try {
-      if(data.isResolved) {
+      if (data.isResolved) {
         data.closedAt = new Date();
       }
       const { query, values } = sqlForPartialUpdate(
@@ -164,6 +173,9 @@ class Ticket {
       return res.rows[0];
     } catch (e) {
       console.error(e);
+      console.error('msg :', e.msg);
+      console.error('statusCode : ', e.statusCode);
+      throw new ExpressError(e.msg, e.statusCode);
     }
   }
 
@@ -202,6 +214,9 @@ class Ticket {
       return ticket;
     } catch (e) {
       console.error(e);
+      console.error('msg :', e.msg);
+      console.error('statusCode : ', e.statusCode);
+      throw new ExpressError(e.msg, e.statusCode);
     }
   }
 
@@ -222,6 +237,9 @@ class Ticket {
       return ticketRes.rows[0];
     } catch (e) {
       console.error(e);
+      console.error('msg :', e.msg);
+      console.error('statusCode : ', e.statusCode);
+      throw new ExpressError(e.msg, e.statusCode);
     }
   }
 
@@ -238,6 +256,9 @@ class Ticket {
       return await Ticket.getById(ticketID);
     } catch (e) {
       console.error(e);
+      console.error('msg :', e.msg);
+      console.error('statusCode : ', e.statusCode);
+      throw new ExpressError(e.msg, e.statusCode);
     }
   }
 }

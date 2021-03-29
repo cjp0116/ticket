@@ -4,7 +4,7 @@ class ExpressError extends Error {
     this.statusCode = statusCode;
     this.msg = msg;
     this.errors = errors;
-    console.log(this.stack);
+    // console.log(this.stack);
   };
 };
 

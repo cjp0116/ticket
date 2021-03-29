@@ -30,7 +30,7 @@ router.post("/login", loginRules(), validate, async (req, res, next) => {
 // incorrect usernames/pw should raise 409.
 // if they're not a admin, should raise 401.
 // if any of the incoming data is invalid, raise 422.
-router.post("/register", userRegistrationRules(), validate , async (req, res, next) => {
+router.post("/register", ensureAdmin, userRegistrationRules(), validate , async (req, res, next) => {
   try {
     const user = await User.register(req.body);
     const token = createToken(user.username, user.isAdmin);

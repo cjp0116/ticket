@@ -56,15 +56,16 @@ describe('GET /tickets/:id', () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.ticket.id).toBe(1);
   });
-  test('It should raise 404 if ticket not found', async () => {
-    const res = await request(app).get('/tickets/984894');
+
+  test('It should raise 404 if ticket does not exist', async () => {
+    const res = await request(app).get(`tickets/4`);
     expect(res.statusCode).toBe(404);
-    expect(res.body.error.msg).toBe('ticket does not exist');
-  });
+  })
+
 });
 
 describe('POST tickets/', () => {
-  test('It should create a ticket', async () => {
+  test('Raise 422 if all the required fields are not there', async () => {
     const res = await request(app).post("/tickets/").send({
       createdBy : "testUser1",
       assignedTo : "testUser3",
@@ -72,6 +73,19 @@ describe('POST tickets/', () => {
       isResolved : false,
       subject : "testSubject",
       requestDetail : "testRequestDetail"
+    });
+    expect(res.statusCode).toBe(422);
+  });
+
+  test('It should create a ticket', async () => {
+    const res = await request(app).post("/tickets/").send({
+      createdBy : 'testUser1',
+      assignedTo : 'testUser3',
+      isResolved : false,
+      subject : 'testSubject',
+      requestDetail : 'testRequestDetail',
+      assignedGroup : 'F_STACK',
+      importanceLevel : 5
     });
     expect(res.statusCode).toBe(200);
     const ticket = res.body.ticket
@@ -112,7 +126,7 @@ describe('DELETE /tickets/:id', () => {
   });
   test('Should raise a 404 if that ticket does not exist', async () => {
     const res = await request(app).delete('/tickets/65476546');
-    expect(res.statusCode).toBe(404)
+    expect(res.statusCode).toBe(404);
   })
 });
 
@@ -135,7 +149,7 @@ describe('POST /tickets/:id/notes', () => {
       message : 'lmao'
     });
     expect(res.statusCode).toBe(404);
-    expect(res.body.error.msg).toBe('Ticket does not exist');
+    expect(res.body.errors.msg).toBe('Ticket does not exist');
   });
 });
 
@@ -156,7 +170,7 @@ describe('PUT /tickets/:id/notes', () => {
       createdBy : `It shouldn't even work lmao`
     });
     expect(res.statusCode).toBe(404);
-    expect(res.body.error.msg).toBe('Ticket does not exist')
+    expect(res.body.errors.msg).toBe('Ticket does not exist')
   });
 });
 
@@ -170,12 +184,12 @@ describe('DELETE /tickets/:ticketID/notes/:id', () => {
   test('404 if the ticket is not found', async () => {
     const res = await request(app).delete('/tickets/56465/notes/1');
     expect(res.statusCode).toBe(404);
-    expect(res.body.error.msg).toBe('Ticket does not exist');
+    expect(res.body.errors.msg).toBe('Ticket does not exist');
   });
   test('404 if the note is not found', async () => {
     const res = await request(app).delete('/tickets/1/notes/968494');
     expect(res.statusCode).toBe(404);
-    expect(res.body.error.msg).toBe('Note does not exist');
+    expect(res.body.errors.msg).toBe('Note does not exist');
   })
 })
 

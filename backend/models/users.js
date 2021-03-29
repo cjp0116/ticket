@@ -43,7 +43,8 @@ class User {
       );
       return res.rows[0];
     } catch(e) {
-      console.error(e)
+      console.error(e);
+      throw new ExpressError(e.msg, e.statusCode);
     }
   };
 
@@ -59,7 +60,8 @@ class User {
       delete user.password; 
       return user;
     } catch(e) {
-      console.error(e)
+      console.error(e);
+      throw new ExpressError(e.msg, e.statusCode);
     }
   };
 
@@ -89,7 +91,8 @@ class User {
         `DELETE FROM users WHERE username = $1`, [username]
       );
     } catch(e) {
-      console.error(e)
+      console.error(e);
+      throw new ExpressError(e.msg, e.statusCode);
     }
   };
 
@@ -103,7 +106,8 @@ class User {
       const updatedUser = await db.query(query, values);
       return updatedUser.rows[0]
     } catch(e) {
-      console.error(e)
+      console.error(e);
+      throw new ExpressError(e.msg, e.statusCode);
     }
   };
 

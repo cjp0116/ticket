@@ -59,14 +59,14 @@ describe('POST /login', () => {
 
 // REGISTRATION ROUTES
 describe("POST /register", () => {
-  test('should raise 409 if incorrect username/pw', async () => {
+  test('should raise 422 if all the required fields are not present.', async () => {
     const res = await request(app).post('/register').send({
       _token : tokens.testUser3,
       email : "testEmail55@gmail.com",
       username : "testUser1",
       password : "ososecret"
     });
-    expect(res.statusCode).toBe(409);    
+    expect(res.statusCode).toBe(422);    
   });
   test('It should return a token upon successful registration', async () => {
     const res = await request(app).post("/register").send({
