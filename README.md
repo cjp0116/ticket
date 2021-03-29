@@ -10,7 +10,7 @@
 - After installing postgresql, create a database named `ticket_system` and run the sql file `psql < data.sql` to populate the database.
 
 # DB Schema
-- You can see the database schema [here](https://app.quickdatabasediagrams.com/#/d/v7Eozr)
+- You can see the database schema [here](https://i.imgur.com/vLStnsZ.png)
 
 
 # How to start the app
