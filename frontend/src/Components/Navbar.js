@@ -11,7 +11,7 @@ const Navbar = (props) => {
     setActiveItem(name);
   };
 
-  const nonAuthMarkUp = () => {
+  if(props.nonAuth) {
     return (
       <div>
         <Menu pointing secondary>
@@ -29,9 +29,7 @@ const Navbar = (props) => {
         </Menu>
       </div>
     );
-  };
-
-  if (!currentUser) return nonAuthMarkUp();
+  }
 
   return (
     <div>

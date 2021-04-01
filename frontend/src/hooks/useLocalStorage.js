@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 const useLocalStorage = (key, initVal = null) => {
   const initialValue = localStorage.getItem(key) || initVal;
   const [item, setItem] = useState(initialValue);
+  
   useEffect(() => {
     if(!item) {
       localStorage.removeItem(item)
@@ -10,6 +11,7 @@ const useLocalStorage = (key, initVal = null) => {
       localStorage.setItem(key, item)
     }
   }, [key, item]);
+
   return [item, setItem]
 };
 

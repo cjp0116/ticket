@@ -8,6 +8,7 @@ import Navbar from "./Components/Navbar";
 import AuthContext from "./context/AuthContext";
 import { useHistory } from "react-router-dom";
 import { Loader, Dimmer } from "semantic-ui-react";
+
 function App() {
   const [token, setToken] = useLocalStorage("token");
   const [loading, setLoading] = useState(false);
@@ -34,7 +35,7 @@ function App() {
   const handleLogout = () => {
     setCurrentUser(null);
     setToken(null);
-    history.push("/");
+    history.push("/login");
   };
 
   return (
@@ -47,8 +48,8 @@ function App() {
         </Dimmer>
       )}
       <div className="App">
-        <Navbar />
-        <Routes />
+        { !currentUser ? <Navbar nonAuth /> : <Navbar />  } 
+        { !currentUser ? <Routes nonAuth /> : <Routes />  }
       </div>
     </AuthContext.Provider>
   );
